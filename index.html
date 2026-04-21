@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digicam Venture — Secondhand Digital Cameras Singapore</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+
+    /* ============================================================
+       COLOURS — change these to restyle the whole site instantly
+       ============================================================ */
+    :root {
+      --yellow:     #FFE135;   /* main accent */
+      --orange:     #FF5C00;   /* buttons, highlights */
+      --green:      #00C853;   /* in-stock badge */
+      --red:        #FF1744;   /* sold-out badge */
+      --navy:       #0A0A1A;   /* dark backgrounds */
+      --white:      #FFFFFF;
+      --offwhite:   #F7F6F1;   /* page background */
+      --text:       #111118;   /* body text */
+      --muted:      #6B6B78;   /* secondary text */
+      --border:     #E2E1DC;   /* card borders */
+      --radius:     14px;      /* corner rounding */
+    }
+
+
+    /* ============================================================
+       RESET & BASE
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--offwhite);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: 'DM Sans', sans-serif; }
+    img { display: block; max-width: 100%; }
+
+
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6vw;
+      height: 60px;
+      border-bottom: 3px solid var(--yellow);
+    }
+
+    /* Site logo — edit the text inside <nav> in the HTML below */
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 1px;
+      color: var(--yellow);
+    }
+    .nav-logo span { color: var(--white); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.65);
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--yellow); }
+
+    /* "Browse Cameras" button in nav */
+    .nav-btn {
+      background: var(--yellow);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .nav-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+
+
+    /* ============================================================
+       HERO SECTION
+       ============================================================ */
+    .hero {
+      background: var(--navy);
+      padding: 72px 6vw 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      min-height: 480px;
+    }
+
+    /* Big headline — edit wording in the HTML below */
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 0.95;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+    .hero-title .highlight { color: var(--yellow); }
+
+    .hero-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      max-width: 420px;
+      margin-bottom: 32px;
+    }
+
+    /* Hero action buttons */
+    .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .btn-main {
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 13px 28px;
+      border-radius: var(--radius);
+      border: none;
+      transition: opacity 0.15s, transform 0.15s;
+      box-shadow: 0 4px 18px rgba(255,92,0,0.35);
+    }
+    .btn-main:hover { opacity: 0.9; transform: translateY(-2px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 13px 24px;
+      border-radius: var(--radius);
+      border: 2px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.5); transform: translateY(-2px); }
+
+    /* Three small stat boxes in the hero */
+    .hero-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .stat-box {
+      border-top: 2px solid rgba(255,255,255,0.1);
+      padding-top: 14px;
+    }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      color: var(--yellow);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.4);
+      margin-top: 4px;
+    }
+
+    /* Right side of hero: floating camera cards */
+    .hero-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .hero-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      transition: transform 0.25s;
+    }
+    .hero-card:hover { transform: translateY(-4px); }
+    .hero-card:nth-child(even) { margin-top: 22px; }
+    .hero-card-emoji { font-size: 1.8rem; margin-bottom: 8px; }
+    .hero-card-brand { font-size: 0.68rem; color: rgba(255,255,255,0.4); font-family: 'DM Mono', monospace; }
+    .hero-card-model { font-size: 0.9rem; color: var(--white); font-weight: 600; margin-top: 2px; }
+    .hero-card-price { font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--yellow); margin-top: 8px; }
+
+
+    /* ============================================================
+       SCROLLING TICKER STRIP
+       ============================================================ */
+    .ticker {
+      background: var(--yellow);
+      padding: 9px 0;
+      overflow: hidden;
+      border-top: 3px solid var(--navy);
+      border-bottom: 3px solid var(--navy);
+      white-space: nowrap;
+    }
+    .ticker-track {
+      display: inline-flex;
+      animation: scroll-left 22s linear infinite;
+    }
+    @keyframes scroll-left {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--navy);
+      padding: 0 28px;
+    }
+    .ticker-item::after { content: ' ✦ '; }
+
+
+    /* ============================================================
+       SHOP SECTION (camera listings)
+       ============================================================ */
+    .shop-section {
+      padding: 72px 6vw;
+    }
+
+    .section-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 500px;
+      line-height: 1.65;
+      margin-bottom: 36px;
+    }
+
+    /* Brand filter buttons above the grid */
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .filter-btn {
+      background: var(--white);
+      border: 2px solid var(--border);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.82rem;
+      padding: 7px 18px;
+      border-radius: 100px;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: var(--orange);
+      color: var(--orange);
+      background: rgba(255,92,0,0.05);
+    }
+
+    /* The grid of camera cards */
+    .cameras-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 22px;
+    }
+
+    /* Individual camera card */
+    .camera-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .camera-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.10);
+    }
+    .camera-card.sold-out { opacity: 0.55; pointer-events: none; }
+
+    /* Coloured image placeholder area */
+    .card-img {
+      height: 180px;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      position: relative;
+    }
+
+    /* Condition badge (top-left of image) */
+    .badge {
+      position: absolute;
+      top: 10px; left: 10px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 100px;
+      text-transform: uppercase;
+    }
+    .badge-excellent  { background: var(--green);  color: var(--navy); }
+    .badge-like-new   { background: var(--yellow);  color: var(--navy); }
+    .badge-good       { background: #E8E8E8;         color: var(--text); }
+
+    /* Sold Out overlay badge (top-right) */
+    .badge-sold {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: var(--red);
+      color: var(--white);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      padding: 4px 10px;
+      border-radius: 100px;
+    }
+
+    .card-body {
+      padding: 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-brand {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .card-model {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      color: var(--text);
+      margin: 3px 0 6px;
+      letter-spacing: 0.5px;
+    }
+    .card-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .card-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem;
+      color: var(--orange);
+      margin-top: auto;
+      margin-bottom: 14px;
+    }
+    .card-price small {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    /* Buy Now + Ask buttons on each card */
+    .card-actions { display: flex; gap: 8px; }
+    .btn-buy {
+      flex: 1;
+      background: var(--navy);
+      color: var(--yellow);
+      font-weight: 700;
+      font-size: 0.875rem;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      transition: background 0.15s;
+    }
+    .btn-buy:hover { background: #1a1a3a; }
+    .btn-ask {
+      background: var(--offwhite);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      transition: border-color 0.15s;
+    }
+    .btn-ask:hover { border-color: var(--orange); }
+
+
+    /* ============================================================
+       WHY US SECTION
+       ============================================================ */
+    .why-section {
+      background: var(--navy);
+      padding: 72px 6vw;
+    }
+    .why-section .section-title { color: var(--white); }
+    .why-section .section-eyebrow { color: rgba(255,226,53,0.6); }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-top: 48px;
+    }
+    .why-item { display: flex; flex-direction: column; gap: 12px; }
+    .why-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+    }
+    .why-title { font-weight: 700; font-size: 1rem; color: var(--white); }
+    .why-desc  { font-size: 0.875rem; color: rgba(255,255,255,0.45); line-height: 1.65; }
+
+
+    /* ============================================================
+       TELEGRAM CHANNEL BANNER
+       — Edit the link href below to point to your real channel
+       ============================================================ */
+    .tg-banner {
+      background: var(--yellow);
+      padding: 48px 6vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      border-top: 3px solid var(--navy);
+      border-bottom: 3px solid var(--navy);
+    }
+    .tg-text h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: var(--navy);
+      line-height: 1.05;
+      margin-bottom: 6px;
+    }
+    .tg-text p { font-size: 0.9rem; color: rgba(10,10,26,0.6); }
+    .btn-tg {
+      background: var(--navy);
+      color: var(--yellow);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 13px 28px;
+      border-radius: var(--radius);
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: opacity 0.15s, transform 0.15s;
+      white-space: nowrap;
+    }
+    .btn-tg:hover { opacity: 0.88; transform: translateY(-1px); }
+
+
+    /* ============================================================
+       CONTACT / ENQUIRY SECTION
+       ============================================================ */
+    .contact-section {
+      background: var(--white);
+      padding: 72px 6vw;
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    /* Left side info */
+    .contact-info h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.8rem);
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+    .contact-info p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+    .contact-detail {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .detail-icon {
+      width: 38px; height: 38px;
+      background: var(--offwhite);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .detail-label { font-weight: 600; font-size: 0.85rem; color: var(--text); }
+    .detail-val   { font-size: 0.85rem; color: var(--muted); margin-top: 2px; }
+
+    /* Right side form */
+    .enquiry-form { display: flex; flex-direction: column; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-weight: 600; font-size: 0.82rem; color: var(--text); }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 13px;
+      font-size: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      background: var(--offwhite);
+      outline: none;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--orange);
+      background: var(--white);
+    }
+    .form-group textarea { min-height: 110px; resize: vertical; }
+    .btn-send {
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 13px;
+      border-radius: var(--radius);
+      border: none;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    .btn-send:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* Success message shown after form submits */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 28px;
+      background: rgba(0,200,83,0.07);
+      border: 2px solid var(--green);
+      border-radius: var(--radius);
+    }
+    .form-success h3 { color: var(--green); font-size: 1.1rem; margin-bottom: 6px; }
+    .form-success p  { font-size: 0.875rem; color: var(--muted); }
+
+
+    /* ============================================================
+       PURCHASE MODAL
+       ============================================================ */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.65);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--white);
+      border-radius: 20px;
+      width: 100%; max-width: 460px;
+      padding: 28px;
+      position: relative;
+      transform: translateY(24px);
+      transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-close {
+      position: absolute; top: 14px; right: 14px;
+      background: var(--offwhite); border: none;
+      width: 30px; height: 30px; border-radius: 50%;
+      font-size: 0.9rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Step dots at top of modal */
+    .modal-steps { display: flex; gap: 6px; margin-bottom: 20px; }
+    .modal-step  { flex: 1; height: 4px; border-radius: 2px; background: var(--border); transition: background 0.3s; }
+    .modal-step.active { background: var(--orange); }
+    .modal-step.done   { background: var(--green); }
+
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; color: var(--text); margin-bottom: 4px; }
+    .modal-sub   { font-size: 0.85rem; color: var(--muted); margin-bottom: 20px; }
+
+    /* Camera summary box inside modal */
+    .modal-camera {
+      background: var(--offwhite);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+    }
+    .modal-cam-emoji  { font-size: 1.8rem; }
+    .modal-cam-name   { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+    .modal-cam-price  { font-family: 'DM Mono', monospace; font-size: 0.9rem; color: var(--orange); margin-top: 3px; }
+
+    /* PayNow / Card tabs */
+    .pay-tabs  { display: flex; gap: 8px; margin-bottom: 18px; }
+    .pay-tab   {
+      flex: 1; padding: 9px; border-radius: 10px;
+      border: 2px solid var(--border);
+      font-weight: 600; font-size: 0.85rem;
+      background: var(--white);
+      transition: all 0.15s;
+    }
+    .pay-tab.active { border-color: var(--orange); background: rgba(255,92,0,0.06); color: var(--orange); }
+
+    .pay-panel         { display: none; }
+    .pay-panel.active  { display: block; }
+
+    /* PayNow box */
+    .paynow-box {
+      background: var(--navy);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .paynow-label  { font-size: 0.75rem; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
+    .paynow-number { font-family: 'DM Mono', monospace; font-size: 1.15rem; color: var(--yellow); letter-spacing: 2px; }
+    .paynow-amount { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 6px; }
+
+    /* Countdown timer bar */
+    .timer-bar  { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; margin: 14px 0 6px; }
+    .timer-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width 1s linear; }
+    .timer-text { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--muted); text-align: center; margin-bottom: 12px; }
+
+    /* Stripe card element placeholder */
+    #card-element {
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      background: var(--offwhite);
+      margin-bottom: 10px;
+      min-height: 42px;
+    }
+    .stripe-note { font-size: 0.75rem; color: var(--muted); margin-bottom: 14px; }
+
+    .btn-pay {
+      width: 100%;
+      background: var(--orange);
+      color: var(--white);
+      font-weight: 700; font-size: 0.95rem;
+      padding: 13px; border-radius: var(--radius); border: none;
+      transition: opacity 0.15s;
+    }
+    .btn-pay:hover { opacity: 0.9; }
+
+    /* Address / phone step */
+    .modal-fields { display: flex; flex-direction: column; gap: 12px; }
+
+    /* Order confirmed step */
+    .modal-confirm {
+      text-align: center;
+      padding: 16px 0;
+    }
+    .confirm-emoji { font-size: 3rem; margin-bottom: 14px; }
+    .confirm-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--text); margin-bottom: 8px; }
+    .confirm-desc  { font-size: 0.875rem; color: var(--muted); line-height: 1.65; }
+
+
+    /* ============================================================
+       CHAT WIDGET (bottom-right corner)
+       ============================================================ */
+    #chat-bubble {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      width: 54px; height: 54px; border-radius: 50%;
+      background: var(--orange);
+      border: none;
+      box-shadow: 0 4px 20px rgba(255,92,0,0.4);
+      font-size: 1.3rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #chat-bubble:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(255,92,0,0.5); }
+
+    #chat-window {
+      position: fixed; bottom: 88px; right: 24px; z-index: 200;
+      width: 340px; max-height: 500px;
+      background: var(--white);
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      opacity: 0; transform: scale(0.92) translateY(14px); pointer-events: none;
+      transition: opacity 0.2s, transform 0.25s cubic-bezier(.34,1.56,.64,1);
+    }
+    #chat-window.open { opacity: 1; transform: scale(1) translateY(0); pointer-events: all; }
+
+    .chat-header {
+      background: var(--navy);
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .chat-av {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--yellow);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem;
+    }
+    .chat-name   { font-weight: 700; font-size: 0.875rem; color: var(--white); }
+    .chat-online { font-size: 0.72rem; color: rgba(255,255,255,0.45); }
+    .chat-x      { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.45); font-size: 1.1rem; }
+    .chat-x:hover { color: var(--white); }
+
+    .chat-msgs {
+      flex: 1; overflow-y: auto;
+      padding: 14px; display: flex; flex-direction: column; gap: 8px;
+      max-height: 300px;
+    }
+    .msg { max-width: 82%; padding: 9px 13px; border-radius: 13px; font-size: 0.85rem; line-height: 1.5; }
+    .msg.bot  { background: var(--offwhite); color: var(--text); align-self: flex-start; border-bottom-left-radius: 3px; }
+    .msg.user { background: var(--navy); color: var(--white); align-self: flex-end; border-bottom-right-radius: 3px; }
+    .msg.typing { display: flex; gap: 4px; align-items: center; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: blink 1.2s infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+
+    .chat-input-row {
+      padding: 10px;
+      border-top: 1px solid var(--border);
+      display: flex; gap: 8px;
+    }
+    #chat-input {
+      flex: 1; border: 2px solid var(--border); border-radius: 9px;
+      padding: 9px 13px; font-size: 0.85rem; font-family: 'DM Sans', sans-serif;
+      outline: none; background: var(--offwhite);
+      transition: border-color 0.15s;
+    }
+    #chat-input:focus { border-color: var(--orange); background: var(--white); }
+    #chat-send {
+      background: var(--orange); color: var(--white);
+      border: none; border-radius: 9px;
+      padding: 9px 13px; font-size: 0.95rem;
+      transition: opacity 0.15s;
+    }
+    #chat-send:hover { opacity: 0.88; }
+
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      background: var(--navy);
+      padding: 52px 6vw 28px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem; color: var(--yellow);
+      margin-bottom: 10px;
+    }
+    .footer-logo span { color: var(--white); }
+    .footer-tagline { font-size: 0.85rem; color: rgba(255,255,255,0.35); line-height: 1.65; }
+    .footer-col h4  { font-weight: 700; font-size: 0.85rem; color: var(--white); margin-bottom: 14px; }
+    .footer-col a   { display: block; font-size: 0.85rem; color: rgba(255,255,255,0.4); margin-bottom: 9px; transition: color 0.15s; }
+    .footer-col a:hover { color: var(--yellow); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px;
+    }
+    .footer-copy  { font-size: 0.78rem; color: rgba(255,255,255,0.25); }
+    .footer-pills { display: flex; gap: 6px; }
+    .footer-pill  {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.4);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      padding: 4px 9px; border-radius: 5px;
+    }
+
+
+    /* ============================================================
+       RESPONSIVE — smaller screens
+       ============================================================ */
+    @media (max-width: 768px) {
+      .hero          { grid-template-columns: 1fr; min-height: auto; }
+      .hero-cards    { display: none; }
+      .contact-grid  { grid-template-columns: 1fr; }
+      .footer-grid   { grid-template-columns: 1fr 1fr; }
+      .form-row      { grid-template-columns: 1fr; }
+      .tg-banner     { flex-direction: column; }
+      #chat-window   { width: calc(100vw - 32px); right: 16px; }
+    }
+
+  </style>
+</head>
+<body>
+
+
+<!-- ============================================================
+     NAVIGATION
+     — Edit logo text, link labels, and button text here
+     ============================================================ -->
+<nav>
+  <div class="nav-logo">Digicam<span>Venture</span></div>
+  <div class="nav-links">
+    <a href="#shop">Shop</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+    <!-- EDIT: update href to your Telegram channel link -->
+    <a href="https://t.me/digicamventure target="_blank">Telegram</a>
+    <button class="nav-btn" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Browse Cameras</button>
+  </div>
+</nav>
+
+
+<!-- ============================================================
+     HERO SECTION
+     — Edit headline, subtext, and stats here
+     ============================================================ -->
+<section class="hero">
+  <div class="hero-left">
+
+    <!-- EDIT: main headline -->
+    <h1 class="hero-title">
+      Your next<br/>
+      <span class="highlight">favourite</span><br/>
+      camera.
+    </h1>
+
+    <!-- EDIT: subheading description -->
+    <p class="hero-desc">
+      Secondhand digital cameras, personally tested and fairly priced.
+      Shipped anywhere in Singapore in 3–5 business days.
+    </p>
+
+    <div class="hero-buttons">
+      <button class="btn-main" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+        Shop Now →
+      </button>
+      <!-- EDIT: update href to your real Telegram channel -->
+      <a href="https://t.me/digicamventure" target="_blank" class="btn-outline">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.7 8c-.12.56-.46.7-.93.44l-2.57-1.9-1.24 1.19c-.14.14-.25.25-.52.25l.19-2.63 4.77-4.31c.21-.18-.05-.29-.32-.1L8.17 14.32l-2.52-.79c-.55-.17-.56-.55.11-.81l9.88-3.81c.46-.17.86.1.71.88z"/>
+        </svg>
+        Telegram Channel
+      </a>
+    </div>
+
+    <!-- EDIT: update the numbers in stat-num spans -->
+    <div class="hero-stats">
+      <div class="stat-box">
+        <div class="stat-num" id="hero-stock-count">6</div>
+        <div class="stat-label">Models in stock</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3–5</div>
+        <div class="stat-label">Day SG delivery</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Tested cameras</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Decorative camera cards (right side of hero) -->
+  <div class="hero-cards" id="hero-cards">
+    <!-- Populated automatically from CAMERAS_DATA below -->
+  </div>
+</section>
+
+
+<!-- ============================================================
+     TICKER STRIP
+     — Edit the ticker items here (copy/paste items to add more)
+     ============================================================ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span class="ticker-item">FREE SHIPPING IN SINGAPORE</span>
+    <span class="ticker-item">ALL CAMERAS PERSONALLY TESTED</span>
+    <span class="ticker-item">PAYNOW &amp; CREDIT CARD ACCEPTED</span>
+    <span class="ticker-item">3–5 BUSINESS DAY DELIVERY</span>
+    <span class="ticker-item">SECURED BY STRIPE</span>
+    <span class="ticker-item">JOIN OUR TELEGRAM CHANNEL</span>
+    <!-- Duplicated for seamless loop -->
+    <span class="ticker-item">FREE SHIPPING IN SINGAPORE</span>
+    <span class="ticker-item">ALL CAMERAS PERSONALLY TESTED</span>
+    <span class="ticker-item">PAYNOW &amp; CREDIT CARD ACCEPTED</span>
+    <span class="ticker-item">3–5 BUSINESS DAY DELIVERY</span>
+    <span class="ticker-item">SECURED BY STRIPE</span>
+    <span class="ticker-item">JOIN OUR TELEGRAM CHANNEL</span>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     SHOP / CAMERA LISTINGS
+     — Camera data is controlled by CAMERAS_DATA in the script
+       below. Edit that array to add/remove/update cameras.
+     ============================================================ -->
+<section class="shop-section" id="shop">
+  <div class="section-eyebrow">Shop</div>
+  <h2 class="section-title">Available Cameras</h2>
+
+  <!-- EDIT: update this description -->
+  <p class="section-desc">
+    All cameras are secondhand, personally inspected, and priced fairly.
+    Stock is updated in real time.
+  </p>
+
+  <!-- Brand filter buttons — add more if you stock other brands -->
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterBy('all', this)">All</button>
+    <button class="filter-btn" onclick="filterBy('Canon', this)">Canon</button>
+    <button class="filter-btn" onclick="filterBy('Sony', this)">Sony</button>
+    <button class="filter-btn" onclick="filterBy('Fuji', this)">Fuji</button>
+    <button class="filter-btn" onclick="filterBy('Ricoh', this)">Ricoh</button>
+    <button class="filter-btn" onclick="filterBy('Olympus', this)">Olympus</button>
+    <button class="filter-btn" onclick="filterBy('Nikon', this)">Nikon</button>
+  </div>
+
+  <div class="cameras-grid" id="cameras-grid">
+    <!-- Rendered by JS -->
+  </div>
+</section>
+
+
+<!-- ============================================================
+     WHY US SECTION
+     — Edit the four items below
+     ============================================================ -->
+<section class="why-section" id="about">
+  <div class="section-eyebrow">Why us</div>
+  <h2 class="section-title">Why Digicam Venture?</h2>
+
+  <div class="why-grid">
+
+    <!-- EDIT: icon, title, description for each item -->
+    <div class="why-item">
+      <div class="why-icon" style="background: rgba(255,226,53,0.1)">🔍</div>
+      <div class="why-title">Every camera tested</div>
+      <div class="why-desc">We test every single camera before listing. No surprises — what you see is what you get.</div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-icon" style="background: rgba(0,200,83,0.1)">💬</div>
+      <div class="why-title">Ask anything</div>
+      <div class="why-desc">Our AI chat assistant knows every spec. Ask about image quality, who it suits, how it compares.</div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-icon" style="background: rgba(255,92,0,0.1)">🚚</div>
+      <div class="why-title">Fast SG delivery</div>
+      <div class="why-desc">Orders ship within 1–2 days and arrive at your door in 3–5 business days, island-wide.</div>
+    </div>
+
+    <div class="why-item">
+      <div class="why-icon" style="background: rgba(10,10,26,0.15)">🔒</div>
+      <div class="why-title">Secure checkout</div>
+      <div class="why-desc">Pay by credit card via Stripe or PayNow. Your payment is always safe and encrypted.</div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     TELEGRAM CHANNEL BANNER
+     — EDIT: update href to your real Telegram channel link
+     ============================================================ -->
+<div class="tg-banner">
+  <div class="tg-text">
+    <!-- EDIT: headline and subtext -->
+    <h2>New cameras drop weekly.<br/>Don't miss out.</h2>
+    <p>Join our Telegram channel for first access to new listings and flash deals.</p>
+  </div>
+  <!-- EDIT: update href to your real channel -->
+  <a href="https://t.me/digicamventure" target="_blank" class="btn-tg">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.7 8c-.12.56-.46.7-.93.44l-2.57-1.9-1.24 1.19c-.14.14-.25.25-.52.25l.19-2.63 4.77-4.31c.21-.18-.05-.29-.32-.1L8.17 14.32l-2.52-.79c-.55-.17-.56-.55.11-.81l9.88-3.81c.46-.17.86.1.71.88z"/>
+    </svg>
+    Join Telegram Channel
+  </a>
+</div>
+
+
+<!-- ============================================================
+     CONTACT / ENQUIRY SECTION
+     — Edit the info items and form labels here
+     ============================================================ -->
+<section class="contact-section" id="contact">
+  <div class="contact-grid">
+
+    <!-- Left: contact info -->
+    <div class="contact-info">
+      <div class="section-eyebrow">Contact</div>
+      <h2>Got a question?<br/>We're here.</h2>
+      <!-- EDIT: update description -->
+      <p>Leave your question below and we'll reply within a few hours. You'll hear back via email.</p>
+
+      <!-- EDIT: update these detail items -->
+      <div class="contact-detail">
+        <div class="detail-icon">📦</div>
+        <div>
+          <div class="detail-label">Delivery</div>
+          <div class="detail-val">3–5 business days, Singapore only</div>
+        </div>
+      </div>
+
+      <div class="contact-detail">
+        <div class="detail-icon">💳</div>
+        <div>
+          <div class="detail-label">Payment</div>
+          <div class="detail-val">Stripe (credit/debit card) or PayNow</div>
+        </div>
+      </div>
+
+      <div class="contact-detail">
+        <div class="detail-icon">💬</div>
+        <div>
+          <div class="detail-label">Telegram</div>
+          <!-- EDIT: update to your real channel -->
+          <div class="detail-val">
+            <a href="https://t.me/digicamventure" target="_blank" style="color: var(--orange)">@YOUR_CHANNEL</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: enquiry form -->
+    <div>
+      <form class="enquiry-form" id="enquiry-form" onsubmit="submitEnquiry(event)">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your name</label>
+            <input type="text" id="eq-name" placeholder="John Tan" required />
+          </div>
+          <div class="form-group">
+            <label>Email address</label>
+            <input type="email" id="eq-email" placeholder="john@email.com" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Camera you're asking about (optional)</label>
+          <select id="eq-camera">
+            <option value="">General question</option>
+            <!-- Populated automatically from CAMERAS_DATA -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Your question</label>
+          <textarea id="eq-msg" placeholder="Ask anything — specs, condition, payment, delivery..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-send">Send Question →</button>
+      </form>
+
+      <div class="form-success" id="form-success">
+        <h3>✅ Sent!</h3>
+        <p>We've got your question and will reply via email within a few hours.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+     — Edit links and tagline here
+     ============================================================ -->
+<footer>
+  <div class="footer-grid">
+
+    <div>
+      <div class="footer-logo">Digicam<span>Venture</span></div>
+      <!-- EDIT: tagline -->
+      <p class="footer-tagline">Curated secondhand digital cameras in Singapore. Every camera tested, fairly priced, shipped fast.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <a href="#shop">All cameras</a>
+      <a href="#shop">Canon</a>
+      <a href="#shop">Sony</a>
+      <a href="#shop">Fuji &amp; Ricoh</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Help</h4>
+      <a href="#contact">Contact us</a>
+      <!-- EDIT: update to your real channel -->
+      <a href="https://t.me/digicamventure" target="_blank">Telegram channel</a>
+      <a href="#about">About us</a>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <!-- EDIT: update year if needed -->
+    <div class="footer-copy">© 2025 Digicam Venture · Singapore</div>
+    <div class="footer-pills">
+      <span class="footer-pill">STRIPE</span>
+      <span class="footer-pill">PAYNOW</span>
+      <span class="footer-pill">SG ONLY</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ============================================================
+     PURCHASE MODAL
+     — No need to edit this section
+     ============================================================ -->
+<div class="modal-overlay" id="buy-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-steps">
+      <div class="modal-step active" id="ms1"></div>
+      <div class="modal-step" id="ms2"></div>
+      <div class="modal-step" id="ms3"></div>
+    </div>
+
+    <!-- Step 1: Payment -->
+    <div id="modal-pay">
+      <div class="modal-title">Buy this camera</div>
+      <div class="modal-sub">Choose how you'd like to pay</div>
+      <div class="modal-camera">
+        <div class="modal-cam-emoji" id="modal-emoji">📷</div>
+        <div>
+          <div class="modal-cam-name" id="modal-name">—</div>
+          <div class="modal-cam-price" id="modal-price">S$0</div>
+        </div>
+      </div>
+      <div class="pay-tabs">
+        <button class="pay-tab active" onclick="switchTab('paynow')">PayNow</button>
+        <button class="pay-tab" onclick="switchTab('card')">Credit Card</button>
+      </div>
+
+      <!-- PayNow panel -->
+      <div class="pay-panel active" id="panel-paynow">
+        <div class="paynow-box">
+          <div class="paynow-label">Send payment to</div>
+          <!-- EDIT: update with your real PayNow number in the script below -->
+          <div class="paynow-number" id="paynow-num">+65 8518 7046</div>
+          <div class="paynow-amount" id="paynow-amt">Amount: S$0</div>
+        </div>
+        <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+        <div class="timer-text" id="timer-text">Proceeding in 10:00 after you pay...</div>
+        <p style="font-size:0.78rem;color:var(--muted);text-align:center">
+          Transfer the exact amount via PayNow now. We'll continue automatically after the timer.
+        </p>
+      </div>
+
+      <!-- Credit card panel -->
+      <div class="pay-panel" id="panel-card">
+        <div id="card-element"></div>
+        <div class="stripe-note">🔒 Secured by Stripe. We never store your card details.</div>
+        <button class="btn-pay" onclick="proceedToAddress()">
+          Pay S$<span id="card-amt">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Address & phone -->
+    <div id="modal-address" style="display:none">
+      <div class="modal-title">Delivery details</div>
+      <div class="modal-sub">Almost done — where should we send it?</div>
+      <div class="modal-fields">
+        <div class="form-group">
+          <label>Full delivery address</label>
+          <textarea id="modal-addr" placeholder="123 Orchard Rd, #04-01&#10;Singapore 238858" style="min-height:80px"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Phone number</label>
+          <input type="tel" id="modal-phone" placeholder="+65 9123 4567" />
+        </div>
+        <button class="btn-send" onclick="confirmOrder()">Confirm Order →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confirmed -->
+    <div id="modal-confirm" style="display:none">
+      <div class="modal-confirm">
+        <div class="confirm-emoji">🎉</div>
+        <div class="confirm-title">Order confirmed!</div>
+        <p class="confirm-desc">
+          Thank you for your purchase!<br/>
+          We'll ship within 1–2 business days and message you when it's on the way.
+        </p>
+        <button class="btn-main" style="margin-top:20px;width:100%" onclick="closeModal()">Done</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ============================================================
+     CHAT WIDGET
+     — No need to edit this section
+     ============================================================ -->
+<button id="chat-bubble" onclick="toggleChat()" aria-label="Open chat">💬</button>
+
+<div id="chat-window" role="dialog" aria-label="Digicam Assistant">
+  <div class="chat-header">
+    <div class="chat-av">📷</div>
+    <div>
+      <div class="chat-name">Digicam Assistant</div>
+      <div class="chat-online">Online now</div>
+    </div>
+    <button class="chat-x" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="msg bot">👋 Hi! Ask me anything about our cameras, delivery, or payment.</div>
+  </div>
+  <div class="chat-input-row">
+    <input type="text" id="chat-input" placeholder="Ask a question..." onkeydown="if(event.key==='Enter') sendChat()" />
+    <button id="chat-send" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+
+  /* ----------------------------------------------------------
+     CAMERAS_DATA
+     — THIS IS THE MAIN LIST TO EDIT when adding/removing stock.
+     — In Phase 4, this gets auto-updated from your Excel file.
+
+     Fields:
+       id        — must match Camera ID in Excel (e.g. "CAM-001")
+       brand     — brand name
+       model     — full model name
+       year      — year of manufacture
+       condition — "Excellent", "Like New", or "Good"
+       price     — asking price in SGD (number, no $ sign)
+       stock     — number of units available (0 = sold out)
+       emoji     — display emoji for the card
+     ---------------------------------------------------------- */
+  const CAMERAS_DATA = [
+    { id:"CAM-001", brand:"Canon",   model:"PowerShot G7X Mark III",  year:2019, condition:"Excellent", price:420,  stock:2, emoji:"📷" },
+    { id:"CAM-002", brand:"Sony",    model:"Cyber-shot DSC-RX100 VII", year:2019, condition:"Good",      price:550,  stock:1, emoji:"📸" },
+    { id:"CAM-003", brand:"Ricoh",   model:"GR IIIx",                  year:2021, condition:"Excellent", price:780,  stock:2, emoji:"🎞️" },
+    { id:"CAM-004", brand:"Fuji",    model:"X100V",                    year:2020, condition:"Like New",  price:1050, stock:1, emoji:"✨" },
+    { id:"CAM-005", brand:"Nikon",   model:"Coolpix A1000",            year:2019, condition:"Good",      price:180,  stock:2, emoji:"📷" },
+    { id:"CAM-006", brand:"Olympus", model:"TG-6",                     year:2019, condition:"Excellent", price:280,  stock:0, emoji:"🏕️" },
+  ];
+
+
+  /* ----------------------------------------------------------
+     SETTINGS
+     — Update these to personalise the site
+     ---------------------------------------------------------- */
+  const PAYNOW_NUMBER = "+65 8518 7046";          // ← your real PayNow number
+  const BACKEND_URL   = "http://localhost:5000";   // ← Phase 4 backend (leave as-is for now)
+
+
+  /* ----------------------------------------------------------
+     RENDER CAMERAS
+     ---------------------------------------------------------- */
+  function badgeClass(condition) {
+    if (condition === "Like New")  return "badge-like-new";
+    if (condition === "Excellent") return "badge-excellent";
+    return "badge-good";
+  }
+
+  function renderCameras(list) {
+    const grid = document.getElementById("cameras-grid");
+    if (!list.length) {
+      grid.innerHTML = '<p style="color:var(--muted);grid-column:1/-1">No cameras found for this filter.</p>';
+      return;
+    }
+    grid.innerHTML = list.map(c => `
+      <div class="camera-card${c.stock === 0 ? " sold-out" : ""}" data-brand="${c.brand}">
+        <div class="card-img">
+          <span>${c.emoji}</span>
+          <span class="badge ${badgeClass(c.condition)}">${c.condition}</span>
+          ${c.stock === 0 ? '<span class="badge-sold">Sold Out</span>' : ""}
+        </div>
+        <div class="card-body">
+          <div class="card-brand">${c.brand}</div>
+          <div class="card-model">${c.model}</div>
+          <div class="card-meta">${c.year} · ${c.stock > 0 ? c.stock + " unit" + (c.stock > 1 ? "s" : "") + " left" : "Out of stock"}</div>
+          <div class="card-price">S$${c.price.toLocaleString()} <small>SGD</small></div>
+          <div class="card-actions">
+            ${c.stock > 0 ? `<button class="btn-buy" onclick="openModal('${c.id}')">Buy Now</button>` : ""}
+            <button class="btn-ask" onclick="askAbout('${c.brand} ${c.model}')">Ask</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+
+    // Update hero stock count
+    document.getElementById("hero-stock-count").textContent =
+      CAMERAS_DATA.filter(c => c.stock > 0).length;
+
+    // Populate enquiry dropdown
+    const sel = document.getElementById("eq-camera");
+    sel.innerHTML = '<option value="">General question</option>' +
+      CAMERAS_DATA.map(c => `<option value="${c.brand} ${c.model}">${c.brand} ${c.model}</option>`).join("");
+  }
+
+  function filterBy(brand, btn) {
+    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderCameras(brand === "all" ? CAMERAS_DATA : CAMERAS_DATA.filter(c => c.brand === brand));
+  }
+
+  // Build hero preview cards from first 4 in-stock cameras
+  function renderHeroCards() {
+    const cards = CAMERAS_DATA.filter(c => c.stock > 0).slice(0, 4);
+    document.getElementById("hero-cards").innerHTML = cards.map(c => `
+      <div class="hero-card">
+        <div class="hero-card-emoji">${c.emoji}</div>
+        <div class="hero-card-brand">${c.brand}</div>
+        <div class="hero-card-model">${c.model}</div>
+        <div class="hero-card-price">S$${c.price.toLocaleString()}</div>
+      </div>
+    `).join("");
+  }
+
+  renderCameras(CAMERAS_DATA);
+  renderHeroCards();
+
+
+  /* ----------------------------------------------------------
+     PURCHASE MODAL
+     ---------------------------------------------------------- */
+  let activeCam   = null;
+  let timerHandle = null;
+  let timerSecs   = 600;
+
+  function setStep(n) {
+    [1,2,3].forEach(i => {
+      const el = document.getElementById("ms" + i);
+      el.classList.remove("active","done");
+      if (i < n) el.classList.add("done");
+      if (i === n) el.classList.add("active");
+    });
+  }
+
+  function openModal(id) {
+    activeCam = CAMERAS_DATA.find(c => c.id === id);
+    if (!activeCam) return;
+
+    document.getElementById("modal-name").textContent  = activeCam.brand + " " + activeCam.model;
+    document.getElementById("modal-price").textContent = "S$" + activeCam.price.toLocaleString();
+    document.getElementById("modal-emoji").textContent = activeCam.emoji;
+    document.getElementById("paynow-num").textContent  = PAYNOW_NUMBER;
+    document.getElementById("paynow-amt").textContent  = "Amount: S$" + activeCam.price.toLocaleString();
+    document.getElementById("card-amt").textContent    = activeCam.price.toLocaleString();
+
+    document.getElementById("modal-pay").style.display     = "block";
+    document.getElementById("modal-address").style.display = "none";
+    document.getElementById("modal-confirm").style.display = "none";
+    setStep(1);
+    switchTab("paynow");
+    startTimer();
+
+    document.getElementById("buy-modal").classList.add("open");
+  }
+
+  function closeModal() {
+    document.getElementById("buy-modal").classList.remove("open");
+    clearInterval(timerHandle);
+    timerSecs = 600;
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll(".pay-tab").forEach((t, i) => {
+      t.classList.toggle("active", (tab === "paynow" && i === 0) || (tab === "card" && i === 1));
+    });
+    document.getElementById("panel-paynow").classList.toggle("active", tab === "paynow");
+    document.getElementById("panel-card").classList.toggle("active",   tab === "card");
+    if (tab === "paynow") startTimer();
+    else clearInterval(timerHandle);
+  }
+
+  function startTimer() {
+    clearInterval(timerHandle);
+    timerSecs = 600;
+    timerHandle = setInterval(() => {
+      timerSecs--;
+      const m = Math.floor(timerSecs / 60);
+      const s = timerSecs % 60;
+      document.getElementById("timer-text").textContent =
+        "Proceeding in " + m + ":" + String(s).padStart(2,"0") + " after you pay...";
+      document.getElementById("timer-fill").style.width = (timerSecs / 600 * 100) + "%";
+      if (timerSecs <= 0) { clearInterval(timerHandle); proceedToAddress(); }
+    }, 1000);
+  }
+
+  function proceedToAddress() {
+    clearInterval(timerHandle);
+    document.getElementById("modal-pay").style.display     = "none";
+    document.getElementById("modal-address").style.display = "block";
+    setStep(2);
+  }
+
+  async function confirmOrder() {
+    const addr  = document.getElementById("modal-addr").value.trim();
+    const phone = document.getElementById("modal-phone").value.trim();
+    if (!addr || !phone) { alert("Please fill in your address and phone number."); return; }
+
+    // Send to backend (Phase 4 — safe to fail until backend is running)
+    try {
+      await fetch(BACKEND_URL + "/api/sale", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          camera_id:     activeCam.id,
+          sale_price:    activeCam.price,
+          channel:       "Website",
+          buyer_contact: "website",
+          buyer_address: addr,
+          buyer_phone:   phone,
+        })
+      });
+    } catch (e) {
+      // Backend not yet running — order still shown as confirmed
+      console.log("Backend not reachable:", e);
+    }
+
+    // Update local stock count so UI reflects the sale
+    const cam = CAMERAS_DATA.find(c => c.id === activeCam.id);
+    if (cam) cam.stock = Math.max(0, cam.stock - 1);
+    renderCameras(CAMERAS_DATA);
+
+    document.getElementById("modal-address").style.display = "none";
+    document.getElementById("modal-confirm").style.display = "block";
+    setStep(3);
+  }
+
+  // Close modal when clicking the dark overlay
+  document.getElementById("buy-modal").addEventListener("click", function(e) {
+    if (e.target === this) closeModal();
+  });
+
+
+  /* ----------------------------------------------------------
+     ENQUIRY FORM
+     ---------------------------------------------------------- */
+  async function submitEnquiry(e) {
+    e.preventDefault();
+    const payload = {
+      name:    document.getElementById("eq-name").value,
+      email:   document.getElementById("eq-email").value,
+      camera:  document.getElementById("eq-camera").value,
+      message: document.getElementById("eq-msg").value,
+    };
+    try {
+      await fetch(BACKEND_URL + "/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {
+      console.log("Backend not reachable:", e);
+    }
+    document.getElementById("enquiry-form").style.display = "none";
+    document.getElementById("form-success").style.display = "block";
+  }
+
+
+  /* ----------------------------------------------------------
+     CHAT WIDGET
+     ---------------------------------------------------------- */
+  let chatOpen = false;
+
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    document.getElementById("chat-window").classList.toggle("open", chatOpen);
+    if (chatOpen) document.getElementById("chat-input").focus();
+  }
+
+  function askAbout(modelName) {
+    if (!chatOpen) toggleChat();
+    document.getElementById("chat-input").value = "Tell me about the " + modelName;
+    sendChat();
+  }
+
+  function addMsg(text, role) {
+    const msgs = document.getElementById("chat-msgs");
+    const el   = document.createElement("div");
+    el.className   = "msg " + role;
+    el.textContent = text;
+    msgs.appendChild(el);
+    msgs.scrollTop = msgs.scrollHeight;
+    return el;
+  }
+
+  function addTyping() {
+    const msgs = document.getElementById("chat-msgs");
+    const el   = document.createElement("div");
+    el.className = "msg bot typing";
+    el.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+    msgs.appendChild(el);
+    msgs.scrollTop = msgs.scrollHeight;
+    return el;
+  }
+
+  async function sendChat() {
+    const input = document.getElementById("chat-input");
+    const text  = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    addMsg(text, "user");
+    const typing = addTyping();
+
+    try {
+      const res  = await fetch(BACKEND_URL + "/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, inventory: CAMERAS_DATA })
+      });
+      const data = await res.json();
+      typing.remove();
+      addMsg(data.reply, "bot");
+    } catch (e) {
+      typing.remove();
+      // Fallback replies when backend isn't running yet
+      const q = text.toLowerCase();
+      let reply = "Great question! Our live assistant will be active once the backend is running (Phase 4). In the meantime, use the contact form below!";
+      if (q.includes("deliver")) reply = "We deliver within Singapore only — 3 to 5 business days after your order is confirmed.";
+      if (q.includes("pay"))     reply = "We accept PayNow and credit/debit cards via Stripe. Both options appear at checkout.";
+      if (q.includes("return"))  reply = "All cameras are sold as-is and tested before listing. If there's an issue we missed, reach out and we'll sort it out.";
+      if (q.includes("stock"))   reply = "Our stock is updated in real time — check the Shop section above to see what's available right now!";
+      addMsg(reply, "bot");
+    }
+  }
+
+</script>
+
+
+</body>
+</html>
