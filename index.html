@@ -1284,90 +1284,35 @@
        stock     — number of units available (0 = sold out)
        emoji     — display emoji for the card
      ---------------------------------------------------------- */
-  const CAMERAS_DATA = [
-    { id:"CAM-001", brand:"Canon",   model:"PowerShot G7X Mark III",  year:2019, condition:"Excellent", price:420,  stock:2, emoji:"📷" },
-    { id:"CAM-002", brand:"Sony",    model:"Cyber-shot DSC-RX100 VII", year:2019, condition:"Good",      price:550,  stock:1, emoji:"📸" },
-    { id:"CAM-003", brand:"Ricoh",   model:"GR IIIx",                  year:2021, condition:"Excellent", price:780,  stock:2, emoji:"🎞️" },
-    { id:"CAM-004", brand:"Fuji",    model:"X100V",                    year:2020, condition:"Like New",  price:1050, stock:1, emoji:"✨" },
-    { id:"CAM-005", brand:"Nikon",   model:"Coolpix A1000",            year:2019, condition:"Good",      price:180,  stock:2, emoji:"📷" },
-    { id:"CAM-006", brand:"Olympus", model:"TG-6",                     year:2019, condition:"Excellent", price:280,  stock:0, emoji:"🏕️" },
-  ];
+const PAYNOW_NUMBER = "+65 8518 7046";
+  const BACKEND_URL   = "https://digicam-venture.onrender.com";
+  let CAMERAS_DATA = [];
 
-
-  /* ----------------------------------------------------------
-     SETTINGS
-     — Update these to personalise the site
-     ---------------------------------------------------------- */
-  const PAYNOW_NUMBER = "+65 8518 7046";          // ← your real PayNow number
-  const BACKEND_URL   = "https://digicam-venture.onrender.com";   // ← Phase 4 backend (leave as-is for now)
-
-
-  /* ----------------------------------------------------------
-     RENDER CAMERAS
-     ---------------------------------------------------------- */
-  function badgeClass(condition) {
-    if (condition === "Like New")  return "badge-like-new";
-    if (condition === "Excellent") return "badge-excellent";
-    return "badge-good";
-  }
-
-  function renderCameras(list) {
-    const grid = document.getElementById("cameras-grid");
-    if (!list.length) {
-      grid.innerHTML = '<p style="color:var(--muted);grid-column:1/-1">No cameras found for this filter.</p>';
-      return;
+  async function loadInventory() {
+    try {
+      const res  = await fetch(BACKEND_URL + "/api/inventory");
+      const data = await res.json();
+      CAMERAS_DATA = data.cameras.map(c => ({
+        ...c,
+        emoji: getEmoji(c.brand)
+      }));
+    } catch (e) {
+      console.log("Could not load inventory:", e);
+      CAMERAS_DATA = [];
     }
-    grid.innerHTML = list.map(c => `
-      <div class="camera-card${c.stock === 0 ? " sold-out" : ""}" data-brand="${c.brand}">
-        <div class="card-img">
-          <span>${c.emoji}</span>
-          <span class="badge ${badgeClass(c.condition)}">${c.condition}</span>
-          ${c.stock === 0 ? '<span class="badge-sold">Sold Out</span>' : ""}
-        </div>
-        <div class="card-body">
-          <div class="card-brand">${c.brand}</div>
-          <div class="card-model">${c.model}</div>
-          <div class="card-meta">${c.year} · ${c.stock > 0 ? c.stock + " unit" + (c.stock > 1 ? "s" : "") + " left" : "Out of stock"}</div>
-          <div class="card-price">S$${c.price.toLocaleString()} <small>SGD</small></div>
-          <div class="card-actions">
-            ${c.stock > 0 ? `<button class="btn-buy" onclick="openModal('${c.id}')">Buy Now</button>` : ""}
-            <button class="btn-ask" onclick="askAbout('${c.brand} ${c.model}')">Ask</button>
-          </div>
-        </div>
-      </div>
-    `).join("");
-
-    // Update hero stock count
-    document.getElementById("hero-stock-count").textContent =
-      CAMERAS_DATA.filter(c => c.stock > 0).length;
-
-    // Populate enquiry dropdown
-    const sel = document.getElementById("eq-camera");
-    sel.innerHTML = '<option value="">General question</option>' +
-      CAMERAS_DATA.map(c => `<option value="${c.brand} ${c.model}">${c.brand} ${c.model}</option>`).join("");
+    renderCameras(CAMERAS_DATA);
+    renderHeroCards();
   }
 
-  function filterBy(brand, btn) {
-    document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    renderCameras(brand === "all" ? CAMERAS_DATA : CAMERAS_DATA.filter(c => c.brand === brand));
+  function getEmoji(brand) {
+    const map = {
+      "Canon":"📷","Sony":"📸","Fuji":"🎞️","Fujifilm":"🎞️",
+      "Ricoh":"🔴","Nikon":"📷","Olympus":"🏕️","Panasonic":"📹","Leica":"⚫"
+    };
+    return map[brand] || "📷";
   }
 
-  // Build hero preview cards from first 4 in-stock cameras
-  function renderHeroCards() {
-    const cards = CAMERAS_DATA.filter(c => c.stock > 0).slice(0, 4);
-    document.getElementById("hero-cards").innerHTML = cards.map(c => `
-      <div class="hero-card">
-        <div class="hero-card-emoji">${c.emoji}</div>
-        <div class="hero-card-brand">${c.brand}</div>
-        <div class="hero-card-model">${c.model}</div>
-        <div class="hero-card-price">S$${c.price.toLocaleString()}</div>
-      </div>
-    `).join("");
-  }
-
-  renderCameras(CAMERAS_DATA);
-  renderHeroCards();
+  loadInventory();
 
 
   /* ----------------------------------------------------------
