@@ -2003,22 +2003,27 @@ function openBgPreview(key) {
   document.getElementById('bgPreviewNote').textContent   = data.note;
 
   const linksEl = document.getElementById('bgPreviewLinks');
-  linksEl.innerHTML = data.searches.map(s => {
-    const url = `https://www.google.com/search?q=${encodeURIComponent(s.q)}&tbm=isch`;
-    return `
-      <a href="${url}" target="_blank" class="bg-preview-link">
-        <span class="bg-preview-link-icon">🔍</span>
-        ${s.label}
-      </a>
-    `;
-  }).join('');
+  const imgUrl  = `https://digicamventure.github.io/backgrounds/${key}.jpg`;
+
+  linksEl.innerHTML = `
+    <img
+      src="${imgUrl}"
+      alt="${data.name} example"
+      style="width:100%;border-radius:12px;object-fit:cover;max-height:280px;margin-bottom:0.8rem"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+    />
+    <div style="display:none;flex-direction:column;gap:0.6rem">
+      <p style="font-size:0.82rem;color:var(--pb-muted);margin-bottom:0.5rem">No photo uploaded yet. Search for examples:</p>
+      ${data.searches.map(s => {
+        const url = `https://www.google.com/search?q=${encodeURIComponent(s.q)}&tbm=isch`;
+        return `<a href="${url}" target="_blank" class="bg-preview-link">
+          <span class="bg-preview-link-icon">🔍</span>${s.label}
+        </a>`;
+      }).join('')}
+    </div>
+  `;
 
   document.getElementById('bgPreviewOverlay').classList.add('open');
-}
-
-function closeBgPreview(e) {
-  if (e && e.target !== document.getElementById('bgPreviewOverlay') && !e.target.classList.contains('bg-preview-close')) return;
-  document.getElementById('bgPreviewOverlay').classList.remove('open');
 }
   
 </script>
