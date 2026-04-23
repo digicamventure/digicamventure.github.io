@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DigicamVenture — Cameras & Photobooth Singapore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ============================================================
+       COLOURS — edit these to restyle the whole site
+       ============================================================ */
+    :root {
+      --pink:        #f9a8c9;
+      --pink-light:  #fde8f3;
+      --pink-pale:   #fff0f8;
+      --peach:       #ffcba4;
+      --rose:        #e8637c;
+      --rose-dark:   #c44060;
+      --lilac:       #d8b4fe;
+      --mint:        #a7f3d0;
+      --cream:       #fffbf5;
+      --text:        #3d2030;
+      --text-soft:   #7a4f60;
+      --text-muted:  #b07a90;
+      --white:       #ffffff;
+      --border:      #f9c8df;
+
+      /* Photobooth tab colours */
+      --pb-blue:     #3B82F6;
+      --pb-blue-dark:#1D4ED8;
+      --pb-yellow:   #FCD34D;
+      --pb-red:      #EF4444;
+      --pb-green:    #10B981;
+      --pb-bg:       #0F172A;
+      --pb-card:     #1E293B;
+      --pb-border:   #334155;
+      --pb-text:     #F1F5F9;
+      --pb-muted:    #94A3B8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: 'Nunito', sans-serif; }
+
+    /* ============================================================
+       DECORATIVE BLOBS (digicam tab only)
+       ============================================================ */
+    .blob {
+      position: fixed; border-radius: 50%;
+      filter: blur(80px); opacity: 0.3;
+      pointer-events: none; z-index: 0;
+      transition: opacity 0.5s;
+    }
+    .blob-1 { width:500px;height:500px;background:var(--pink);   top:-100px;right:-120px; animation:floatBlob 12s ease-in-out infinite; }
+    .blob-2 { width:400px;height:400px;background:var(--peach);  bottom:10%;left:-100px;  animation:floatBlob 16s ease-in-out infinite reverse; }
+    .blob-3 { width:300px;height:300px;background:var(--lilac);  top:45%;right:5%;        animation:floatBlob 14s ease-in-out infinite 2s; }
+    body.pb-mode .blob { opacity: 0; }
+    @keyframes floatBlob { 0%,100%{transform:translateY(0) scale(1);} 50%{transform:translateY(-30px) scale(1.05);} }
+
+    /* ============================================================
+       NAV
+       ============================================================ */
+    nav {
+      position: sticky; top: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      height: 64px;
+      background: rgba(255,240,248,0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 2px solid var(--border);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    body.pb-mode nav {
+      background: rgba(15,23,42,0.95);
+      border-bottom-color: var(--pb-border);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem; font-weight: 700;
+      color: var(--rose);
+      transition: color 0.4s;
+    }
+    .nav-logo span { font-style: italic; color: var(--pink); }
+    body.pb-mode .nav-logo { color: var(--pb-yellow); }
+    body.pb-mode .nav-logo span { color: var(--pb-blue); }
+
+    /* Main tab switcher */
+    .nav-tabs {
+      display: flex;
+      background: rgba(0,0,0,0.06);
+      border-radius: 50px;
+      padding: 4px;
+      gap: 2px;
+    }
+    .nav-tab {
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+      font-weight: 700; font-size: 0.85rem;
+      border: none;
+      background: transparent;
+      color: var(--text-soft);
+      transition: all 0.2s;
+    }
+    .nav-tab.active {
+      background: var(--rose);
+      color: var(--white);
+    }
+    body.pb-mode .nav-tabs { background: rgba(255,255,255,0.08); }
+    body.pb-mode .nav-tab  { color: var(--pb-muted); }
+    body.pb-mode .nav-tab.active { background: var(--pb-blue); color: var(--white); }
+
+    .nav-links {
+      display: flex; align-items: center; gap: 1.5rem;
+    }
+    .nav-links a {
+      font-weight: 700; font-size: 0.85rem;
+      color: var(--text-soft);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--rose); }
+    body.pb-mode .nav-links a { color: var(--pb-muted); }
+    body.pb-mode .nav-links a:hover { color: var(--pb-yellow); }
+
+    .nav-tg {
+      background: var(--rose); color: var(--white) !important;
+      padding: 0.4rem 1rem; border-radius: 50px;
+      font-weight: 800 !important; font-size: 0.82rem;
+      transition: background 0.2s;
+    }
+    .nav-tg:hover { background: var(--rose-dark) !important; }
+    body.pb-mode .nav-tg { background: var(--pb-blue) !important; }
+    body.pb-mode .nav-tg:hover { background: var(--pb-blue-dark) !important; }
+
+    /* ============================================================
+       TICKER
+       ============================================================ */
+    .ticker-wrap {
+      overflow: hidden; white-space: nowrap;
+      padding: 0.55rem 0;
+      font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em;
+      background: var(--rose); color: var(--white);
+      transition: background 0.4s;
+    }
+    body.pb-mode .ticker-wrap { background: var(--pb-blue); }
+    .ticker-inner { display: inline-block; animation: ticker 30s linear infinite; }
+    .ticker-inner span { margin: 0 2rem; }
+    .ticker-inner span::before { content: "✦  "; }
+    @keyframes ticker { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+
+    /* ============================================================
+       PAGE SECTIONS — shown/hidden by tab
+       ============================================================ */
+    .page-digicam { display: block; }
+    .page-photobooth { display: none; }
+    body.pb-mode .page-digicam { display: none; }
+    body.pb-mode .page-photobooth { display: block; }
+    body.pb-mode { background: var(--pb-bg); color: var(--pb-text); }
+
+    /* ============================================================
+       DIGICAM TAB — HERO
+       ============================================================ */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 88vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: var(--pink-light); color: var(--rose);
+      font-size: 0.78rem; font-weight: 800;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.4rem 1.2rem; border-radius: 50px;
+      border: 2px solid var(--pink);
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 700; line-height: 1.1;
+      color: var(--text); margin-bottom: 1.2rem;
+    }
+    .hero h1 em {
+      font-style: italic; color: var(--rose);
+      position: relative;
+    }
+    .hero h1 em::after {
+      content:''; position:absolute; bottom:2px; left:0; right:0; height:6px;
+      background: var(--pink); border-radius:3px; z-index:-1; opacity:0.6;
+    }
+    .hero p {
+      font-size: 1.05rem; font-weight: 500;
+      color: var(--text-soft); max-width: 460px;
+      margin: 0 auto 2.5rem; line-height: 1.7;
+    }
+    .hero-btns { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+    .btn-primary {
+      background: var(--rose); color: var(--white);
+      padding: 0.85rem 2rem; border-radius: 50px;
+      font-weight: 800; font-size: 0.95rem;
+      border: 2px solid var(--rose);
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 6px 20px rgba(232,99,124,0.3);
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--rose-dark); transform: translateY(-2px); }
+    .btn-secondary {
+      background: var(--white); color: var(--rose);
+      padding: 0.85rem 2rem; border-radius: 50px;
+      font-weight: 800; font-size: 0.95rem;
+      border: 2px solid var(--pink);
+      transition: background 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { background: var(--pink-pale); transform: translateY(-2px); }
+    .hero-stats {
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      justify-content: center; margin-top: 3rem;
+    }
+    .hero-stat {
+      text-align: center; background: var(--white);
+      border: 2px solid var(--border); border-radius: 20px;
+      padding: 1rem 1.6rem;
+      box-shadow: 0 4px 16px rgba(232,99,124,0.1);
+    }
+    .hero-stat .num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem; font-weight: 700; color: var(--rose);
+    }
+    .hero-stat .lbl { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ============================================================
+       DIGICAM TAB — SHOP
+       ============================================================ */
+    .section { padding: 5rem 2.5rem; position: relative; z-index: 1; }
+    .section-label {
+      font-size: 0.72rem; font-weight: 800;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--rose); margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      color: var(--text); margin-bottom: 0.6rem; line-height: 1.1;
+    }
+    .section-desc {
+      font-size: 0.92rem; color: var(--text-muted);
+      max-width: 500px; line-height: 1.65; margin-bottom: 2.5rem;
+    }
+    .filter-row { display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:2rem; }
+    .filter-tab {
+      background: var(--white); border: 2px solid var(--border);
+      color: var(--text-muted); font-weight: 700; font-size: 0.82rem;
+      padding: 0.45rem 1.1rem; border-radius: 50px;
+      transition: all 0.15s;
+    }
+    .filter-tab:hover, .filter-tab.active {
+      border-color: var(--rose); color: var(--rose);
+      background: var(--pink-pale);
+    }
+    .cameras-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1.4rem;
+    }
+    .camera-card {
+      background: var(--white); border: 2px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .camera-card:hover { transform: translateY(-5px); box-shadow: 0 12px 32px rgba(232,99,124,0.15); }
+    .card-img {
+      height: 180px; background: #1a0a14;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.5rem; position: relative; overflow: hidden;
+    }
+    .card-img img { width:100%; height:100%; object-fit:cover; }
+    .card-img img.hidden { display:none; }
+    .card-img .fallback-emoji { font-size:3.5rem; }
+    .badge {
+      position: absolute; top:10px; left:10px;
+      font-size: 0.62rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 50px;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-excellent { background: #10B981; color: #fff; }
+    .badge-like-new  { background: #FCD34D; color: #1a0a14; }
+    .badge-good      { background: #e5e7eb; color: #374151; }
+    .badge-sold      { position:absolute; top:10px; right:10px; background:#EF4444; color:#fff; font-size:0.62rem; font-weight:800; padding:3px 10px; border-radius:50px; }
+    .card-body { padding: 1.2rem; flex:1; display:flex; flex-direction:column; }
+    .card-brand { font-size: 0.68rem; font-weight: 800; color: var(--text-muted); text-transform:uppercase; letter-spacing:1px; }
+    .card-name  { font-family:'Playfair Display',serif; font-size:1.15rem; color:var(--text); margin:3px 0 6px; }
+    .card-meta  { font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem; }
+    .card-price { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--rose); margin-top:auto; margin-bottom:1rem; }
+    .card-actions { display:flex; gap:0.5rem; }
+    .btn-card {
+      flex:1; background: var(--rose); color: var(--white);
+      font-weight:800; font-size:0.85rem;
+      padding:0.6rem; border-radius:12px; border:none;
+      transition: background 0.15s;
+    }
+    .btn-card:hover { background: var(--rose-dark); }
+    .btn-ask {
+      background: var(--pink-pale); color: var(--rose);
+      font-weight:700; font-size:0.85rem;
+      padding:0.6rem 0.9rem; border-radius:12px;
+      border:2px solid var(--border);
+      transition: border-color 0.15s;
+    }
+    .btn-ask:hover { border-color: var(--rose); }
+
+    /* ============================================================
+       DIGICAM TAB — CONTACT FORM
+       ============================================================ */
+    .contact-section {
+      background: var(--white); padding: 5rem 2.5rem;
+      position: relative; z-index: 1;
+    }
+    .contact-grid {
+      display: grid; grid-template-columns: 1fr 1.3fr;
+      gap: 4rem; align-items: start;
+      max-width: 1000px; margin: 0 auto;
+    }
+    .contact-info h2 {
+      font-family:'Playfair Display',serif;
+      font-size: clamp(1.6rem,3vw,2.4rem);
+      color: var(--text); margin-bottom:1rem; line-height:1.1;
+    }
+    .contact-info p { font-size:0.9rem; color:var(--text-muted); line-height:1.7; margin-bottom:1.5rem; }
+    .detail-item { display:flex; gap:0.8rem; align-items:flex-start; margin-bottom:1rem; }
+    .detail-icon {
+      width:36px; height:36px; background:var(--pink-pale);
+      border-radius:10px; display:flex; align-items:center; justify-content:center;
+      font-size:1rem; flex-shrink:0;
+    }
+    .detail-label { font-weight:700; font-size:0.85rem; color:var(--text); }
+    .detail-val   { font-size:0.82rem; color:var(--text-muted); margin-top:2px; }
+    .form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:1rem; }
+    .form-group label { font-weight:700; font-size:0.82rem; color:var(--text); }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      border: 2px solid var(--border); border-radius:12px;
+      padding: 0.65rem 0.9rem; font-size:0.9rem;
+      font-family:'Nunito',sans-serif; color:var(--text);
+      background: var(--cream); outline:none;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--rose); background: var(--white); }
+    .form-group textarea { min-height:100px; resize:vertical; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .btn-send {
+      width:100%; background: var(--rose); color: var(--white);
+      font-weight:800; font-size:0.95rem;
+      padding:0.85rem; border-radius:50px; border:none;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .btn-send:hover { background: var(--rose-dark); transform: translateY(-1px); }
+    .form-success {
+      display:none; text-align:center; padding:2rem;
+      background: rgba(16,185,129,0.08);
+      border: 2px solid #10B981; border-radius:16px;
+    }
+    .form-success h3 { color:#10B981; margin-bottom:0.5rem; }
+    .form-success p  { font-size:0.875rem; color:var(--text-muted); }
+
+    /* ============================================================
+       PHOTOBOOTH TAB — HERO
+       ============================================================ */
+    .pb-hero {
+      min-height: 88vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .pb-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(59,130,246,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(252,211,77,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 60% 80%, rgba(239,68,68,0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .pb-tag {
+      display: inline-block;
+      background: rgba(59,130,246,0.15);
+      color: var(--pb-blue);
+      border: 1px solid rgba(59,130,246,0.3);
+      font-size: 0.75rem; font-weight: 800;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.4rem 1.2rem; border-radius: 50px;
+      margin-bottom: 1.5rem;
+    }
+    .pb-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.6rem, 6.5vw, 5rem);
+      font-weight: 700; line-height: 1.05;
+      color: var(--pb-text); margin-bottom: 1.2rem;
+    }
+    .pb-hero h1 .accent-blue   { color: var(--pb-blue); }
+    .pb-hero h1 .accent-yellow { color: var(--pb-yellow); }
+    .pb-hero h1 .accent-red    { color: var(--pb-red); }
+    .pb-hero p {
+      font-size: 1.05rem; color: var(--pb-muted);
+      max-width: 480px; margin: 0 auto 2.5rem; line-height: 1.7;
+    }
+    .pb-hero-btns { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+    .btn-pb-primary {
+      background: var(--pb-blue); color: var(--white);
+      padding: 0.85rem 2rem; border-radius: 50px;
+      font-weight: 800; font-size: 0.95rem; border: none;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 6px 24px rgba(59,130,246,0.35);
+      display: inline-block;
+    }
+    .btn-pb-primary:hover { background: var(--pb-blue-dark); transform: translateY(-2px); }
+    .btn-pb-secondary {
+      background: transparent; color: var(--pb-text);
+      padding: 0.85rem 2rem; border-radius: 50px;
+      font-weight: 700; font-size: 0.95rem;
+      border: 2px solid var(--pb-border);
+      transition: border-color 0.2s, transform 0.15s;
+      display: inline-block;
+    }
+    .btn-pb-secondary:hover { border-color: var(--pb-blue); transform: translateY(-2px); }
+
+    /* Floating colour swatches */
+    .pb-swatches {
+      display: flex; gap: 0.8rem; justify-content: center;
+      margin-top: 3rem; flex-wrap: wrap;
+    }
+    .swatch {
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 3px solid rgba(255,255,255,0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: default;
+    }
+    .swatch:hover { transform: scale(1.15); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .swatch-label { display:flex; flex-direction:column; align-items:center; gap:0.4rem; }
+    .swatch-name { font-size:0.65rem; color:var(--pb-muted); }
+
+    /* ============================================================
+       PHOTOBOOTH TAB — PRICING
+       ============================================================ */
+    .pb-section { padding: 5rem 2.5rem; }
+    .pb-section-label {
+      font-size: 0.72rem; font-weight: 800;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--pb-blue); margin-bottom: 0.5rem;
+    }
+    .pb-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem,4vw,2.8rem);
+      color: var(--pb-text); margin-bottom: 0.6rem; line-height: 1.1;
+    }
+    .pb-section-desc {
+      font-size: 0.92rem; color: var(--pb-muted);
+      max-width: 520px; line-height: 1.65; margin-bottom: 3rem;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.4rem; max-width: 1100px; margin: 0 auto;
+    }
+    .pricing-card {
+      background: var(--pb-card);
+      border: 1px solid var(--pb-border);
+      border-radius: 20px; padding: 2rem;
+      position: relative; overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+    .pricing-card.featured {
+      border-color: var(--pb-blue);
+      box-shadow: 0 0 0 1px var(--pb-blue), 0 8px 32px rgba(59,130,246,0.2);
+    }
+    .pricing-card.featured::before {
+      content: 'Most Popular';
+      position: absolute; top: 16px; right: 16px;
+      background: var(--pb-blue); color: var(--white);
+      font-size: 0.65rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 50px;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .pricing-name  { font-size: 0.78rem; font-weight: 800; color: var(--pb-blue); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+    .pricing-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem; font-weight: 700; color: var(--pb-text);
+      line-height: 1; margin-bottom: 0.3rem;
+    }
+    .pricing-price span { font-size: 1rem; font-weight: 400; color: var(--pb-muted); }
+    .pricing-sub  { font-size: 0.82rem; color: var(--pb-muted); margin-bottom: 1.5rem; line-height: 1.5; }
+    .pricing-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.8rem; }
+    .pricing-list li { font-size: 0.88rem; color: var(--pb-muted); display: flex; gap: 0.5rem; align-items: flex-start; }
+    .pricing-list li::before { content: '✓'; color: var(--pb-green); font-weight: 800; flex-shrink: 0; }
+    .pricing-list li.extra::before { content: '+'; color: var(--pb-yellow); }
+    .pricing-list li.warn::before  { content: '!'; color: var(--pb-red); }
+
+    /* Surcharge notice */
+    .surcharge-box {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 14px; padding: 1.2rem 1.5rem;
+      margin: 2rem auto; max-width: 600px;
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .surcharge-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .surcharge-title { font-weight: 800; font-size: 0.9rem; color: var(--pb-red); margin-bottom: 0.3rem; }
+    .surcharge-desc  { font-size: 0.85rem; color: var(--pb-muted); line-height: 1.55; }
+
+    /* ============================================================
+       PHOTOBOOTH TAB — BACKGROUNDS
+       ============================================================ */
+    .bg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem; margin-bottom: 2rem;
+    }
+    .bg-card {
+      border-radius: 14px; overflow: hidden;
+      border: 2px solid var(--pb-border);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .bg-card:hover { transform: translateY(-3px); border-color: var(--pb-blue); }
+    .bg-swatch {
+      height: 100px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+    .bg-info { padding: 0.7rem; background: var(--pb-card); }
+    .bg-name  { font-size: 0.82rem; font-weight: 700; color: var(--pb-text); }
+    .bg-price { font-size: 0.75rem; color: var(--pb-muted); margin-top: 2px; }
+    .bg-price.extra { color: var(--pb-yellow); }
+
+    /* ============================================================
+       PHOTOBOOTH TAB — ENQUIRY FORM
+       ============================================================ */
+    .pb-contact {
+      background: var(--pb-card);
+      border-top: 1px solid var(--pb-border);
+      padding: 5rem 2.5rem;
+    }
+    .pb-form-wrap { max-width: 640px; margin: 0 auto; }
+    .pb-form-group { display:flex; flex-direction:column; gap:5px; margin-bottom:1rem; }
+    .pb-form-group label { font-weight:700; font-size:0.82rem; color:var(--pb-text); }
+    .pb-form-group input,
+    .pb-form-group textarea,
+    .pb-form-group select {
+      border: 1px solid var(--pb-border); border-radius:12px;
+      padding: 0.65rem 0.9rem; font-size:0.9rem;
+      font-family:'Nunito',sans-serif;
+      color: var(--pb-text); background: var(--pb-bg); outline:none;
+      transition: border-color 0.15s;
+    }
+    .pb-form-group input:focus,
+    .pb-form-group textarea:focus,
+    .pb-form-group select:focus { border-color: var(--pb-blue); }
+    .pb-form-group textarea { min-height:100px; resize:vertical; }
+    .pb-form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .btn-pb-send {
+      width:100%; background: var(--pb-blue); color: var(--white);
+      font-weight:800; font-size:0.95rem;
+      padding:0.85rem; border-radius:50px; border:none;
+      transition: background 0.15s, transform 0.15s;
+    }
+    .btn-pb-send:hover { background: var(--pb-blue-dark); transform: translateY(-1px); }
+    .pb-form-success {
+      display:none; text-align:center; padding:2rem;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid var(--pb-green); border-radius:16px;
+    }
+    .pb-form-success h3 { color:var(--pb-green); margin-bottom:0.5rem; }
+    .pb-form-success p  { font-size:0.875rem; color:var(--pb-muted); }
+
+    /* ============================================================
+       TELEGRAM STRIP
+       ============================================================ */
+    .tg-strip {
+      background: var(--pink-light);
+      border-top: 2px solid var(--border); border-bottom: 2px solid var(--border);
+      padding: 3rem 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 2rem; flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    body.pb-mode .tg-strip {
+      background: rgba(59,130,246,0.08);
+      border-color: var(--pb-border);
+    }
+    .tg-strip h2 {
+      font-family:'Playfair Display',serif;
+      font-size: clamp(1.4rem,3vw,2rem);
+      color: var(--text); margin-bottom: 0.4rem;
+    }
+    body.pb-mode .tg-strip h2 { color: var(--pb-text); }
+    .tg-strip p { font-size:0.88rem; color:var(--text-muted); }
+    body.pb-mode .tg-strip p { color:var(--pb-muted); }
+
+    /* ============================================================
+       SHARED BUY MODAL
+       ============================================================ */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,0.7);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal {
+      background: var(--white); border-radius: 24px;
+      width: 100%; max-width: 440px; padding: 2rem;
+      position: relative; max-height: 90vh; overflow-y: auto;
+      transform: translateY(20px);
+      transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+    .modal-close {
+      position:absolute; top:14px; right:14px;
+      background: var(--pink-pale); border:none;
+      width:30px; height:30px; border-radius:50%;
+      font-size:0.9rem; cursor:pointer;
+    }
+    .modal-title { font-family:'Playfair Display',serif; font-size:1.4rem; color:var(--text); margin-bottom:4px; }
+    .modal-sub   { font-size:0.85rem; color:var(--text-muted); margin-bottom:1.5rem; }
+    .modal-step  { display:none; }
+    .modal-step.active { display:block; }
+    .pay-options { display:flex; gap:0.6rem; margin-bottom:1.2rem; }
+    .pay-opt {
+      flex:1; padding:0.7rem; border-radius:12px; text-align:center;
+      border:2px solid var(--border); font-weight:700; font-size:0.85rem;
+      cursor:pointer; transition:all 0.15s; color:var(--text-soft);
+    }
+    .pay-opt.selected { border-color:var(--rose); color:var(--rose); background:var(--pink-pale); }
+    .paynow-box {
+      background: #1a0a14; border-radius:14px;
+      padding:1.2rem; text-align:center; margin-bottom:1rem;
+    }
+    .paynow-label  { font-size:0.75rem; color:rgba(255,255,255,0.45); margin-bottom:4px; }
+    .paynow-num    { font-size:1.1rem; font-weight:800; color:var(--pink); letter-spacing:2px; }
+    .timer         { font-size:0.78rem; color:rgba(255,255,255,0.4); margin-top:6px; }
+    .success-screen { text-align:center; padding:1rem 0; }
+    .success-icon   { font-size:3rem; margin-bottom:1rem; }
+    .success-screen h3 { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--text); margin-bottom:0.6rem; }
+    .success-screen p  { font-size:0.875rem; color:var(--text-muted); line-height:1.6; }
+
+    /* ============================================================
+       CHAT WIDGET
+       ============================================================ */
+    .chat-bubble {
+      position: fixed; bottom:24px; right:24px; z-index:300;
+      width:54px; height:54px; border-radius:50%;
+      background: var(--rose); border:none;
+      font-size:1.3rem; cursor:pointer;
+      box-shadow: 0 4px 20px rgba(232,99,124,0.4);
+      display: flex; align-items:center; justify-content:center;
+      transition: transform 0.2s, background 0.3s;
+    }
+    body.pb-mode .chat-bubble { background: var(--pb-blue); box-shadow:0 4px 20px rgba(59,130,246,0.4); }
+    .chat-bubble:hover { transform: scale(1.08); }
+    .chat-window {
+      position: fixed; bottom:88px; right:24px; z-index:300;
+      width:330px; max-height:480px;
+      background: var(--white); border-radius:20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+      display: flex; flex-direction:column; overflow:hidden;
+      opacity:0; transform:scale(0.92) translateY(12px); pointer-events:none;
+      transition: opacity 0.2s, transform 0.25s cubic-bezier(.34,1.56,.64,1);
+    }
+    .chat-window.open { opacity:1; transform:scale(1) translateY(0); pointer-events:all; }
+    .chat-header {
+      padding:0.9rem 1rem; display:flex; align-items:center; gap:0.7rem;
+      background: var(--rose); transition: background 0.3s;
+    }
+    body.pb-mode .chat-header { background: var(--pb-blue); }
+    .chat-av { width:32px; height:32px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; font-size:0.9rem; }
+    .chat-name   { font-weight:800; font-size:0.875rem; color:var(--white); }
+    .chat-online { font-size:0.72rem; color:rgba(255,255,255,0.6); }
+    .chat-x      { margin-left:auto; background:none; border:none; color:rgba(255,255,255,0.6); font-size:1.1rem; }
+    .chat-msgs   { flex:1; overflow-y:auto; padding:0.9rem; display:flex; flex-direction:column; gap:0.6rem; max-height:280px; }
+    .chat-msg    { display:flex; }
+    .chat-msg.bot  .chat-msg-bubble { background:var(--pink-pale); color:var(--text); border-bottom-left-radius:3px; }
+    .chat-msg.user .chat-msg-bubble { background:var(--rose); color:var(--white); align-self:flex-end; border-bottom-right-radius:3px; margin-left:auto; }
+    body.pb-mode .chat-msg.bot .chat-msg-bubble { background:var(--pb-card); color:var(--pb-text); border:1px solid var(--pb-border); }
+    body.pb-mode .chat-msg.user .chat-msg-bubble { background:var(--pb-blue); }
+    .chat-msg-bubble { max-width:82%; padding:0.6rem 0.9rem; border-radius:14px; font-size:0.85rem; line-height:1.5; }
+    .chat-input-row { padding:0.7rem; border-top:1px solid var(--border); display:flex; gap:0.5rem; }
+    body.pb-mode .chat-input-row { border-top-color:var(--pb-border); }
+    #chatInput {
+      flex:1; border:2px solid var(--border); border-radius:10px;
+      padding:0.6rem 0.8rem; font-size:0.85rem; font-family:'Nunito',sans-serif;
+      outline:none; background:var(--cream); transition:border-color 0.15s;
+    }
+    body.pb-mode #chatInput { background:var(--pb-bg); border-color:var(--pb-border); color:var(--pb-text); }
+    #chatInput:focus { border-color:var(--rose); }
+    body.pb-mode #chatInput:focus { border-color:var(--pb-blue); }
+    #chatSend {
+      background:var(--rose); color:var(--white); border:none;
+      border-radius:10px; padding:0.6rem 0.9rem; font-size:0.95rem;
+      transition:background 0.15s;
+    }
+    body.pb-mode #chatSend { background:var(--pb-blue); }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      background: #1a0a14; padding:3rem 2.5rem 1.5rem;
+      position: relative; z-index: 1;
+      transition: background 0.4s;
+    }
+    body.pb-mode footer { background: #020617; }
+    .footer-grid {
+      display: grid; grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 3rem; margin-bottom: 3rem;
+    }
+    .footer-logo { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--pink); margin-bottom:0.7rem; }
+    .footer-logo span { font-style:italic; }
+    body.pb-mode .footer-logo { color:var(--pb-yellow); }
+    .footer-tagline { font-size:0.82rem; color:rgba(255,255,255,0.35); line-height:1.65; }
+    .footer-col h4  { font-weight:800; font-size:0.82rem; color:rgba(255,255,255,0.7); margin-bottom:1rem; }
+    .footer-col a   { display:block; font-size:0.82rem; color:rgba(255,255,255,0.35); margin-bottom:0.6rem; transition:color 0.15s; }
+    .footer-col a:hover { color:var(--pink); }
+    body.pb-mode .footer-col a:hover { color:var(--pb-yellow); }
+    .footer-bottom {
+      border-top:1px solid rgba(255,255,255,0.08); padding-top:1.2rem;
+      display:flex; justify-content:space-between; align-items:center;
+      flex-wrap:wrap; gap:0.6rem;
+    }
+    .footer-copy  { font-size:0.75rem; color:rgba(255,255,255,0.2); }
+    .footer-pills { display:flex; gap:0.4rem; }
+    .footer-pill  { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.35); font-size:0.6rem; font-weight:800; padding:3px 8px; border-radius:5px; letter-spacing:0.06em; }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media(max-width:768px){
+      nav { padding:0 1rem; }
+      .nav-links { display:none; }
+      .contact-grid { grid-template-columns:1fr; }
+      .footer-grid  { grid-template-columns:1fr 1fr; }
+      .form-row, .pb-form-row { grid-template-columns:1fr; }
+      .tg-strip { flex-direction:column; }
+      .chat-window { width:calc(100vw - 32px); right:16px; }
+      .pricing-grid { grid-template-columns:1fr; }
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- BLOBS -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- ============================================================
+     NAV
+     ============================================================ -->
+<nav>
+  <div class="nav-logo">Digicam<span>Venture</span></div>
+
+  <!-- EDIT: Tab labels -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchTab('digicam')">📷 Digicams</button>
+    <button class="nav-tab"        onclick="switchTab('photobooth')">🎞 Photobooth</button>
+  </div>
+
+  <div class="nav-links">
+    <a href="#" onclick="scrollToSection('shop', 'digicam')">Shop</a>
+    <a href="#" onclick="scrollToSection('pb-pricing', 'photobooth')">Pricing</a>
+    <a href="#" onclick="scrollToSection('contact', 'digicam')">Contact</a>
+    <!-- EDIT: update to your real Telegram channel -->
+    <a href="https://t.me/YOUR_CHANNEL" target="_blank" class="nav-tg">Telegram</a>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span>FREE SHIPPING IN SINGAPORE</span>
+    <span>CAMERAS PERSONALLY TESTED</span>
+    <span>PHOTOBOOTH RENTAL AVAILABLE</span>
+    <span>PAYNOW & CREDIT CARD ACCEPTED</span>
+    <span>3–5 DAY DELIVERY</span>
+    <span>PROPS & BACKGROUNDS AVAILABLE</span>
+    <span>FREE SHIPPING IN SINGAPORE</span>
+    <span>CAMERAS PERSONALLY TESTED</span>
+    <span>PHOTOBOOTH RENTAL AVAILABLE</span>
+    <span>PAYNOW & CREDIT CARD ACCEPTED</span>
+    <span>3–5 DAY DELIVERY</span>
+    <span>PROPS & BACKGROUNDS AVAILABLE</span>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     DIGICAM PAGE
+     ============================================================ -->
+<div class="page-digicam">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">Secondhand Digicams · Singapore</div>
+    <!-- EDIT: headline -->
+    <h1>Your next<br/><em>favourite</em><br/>camera.</h1>
+    <!-- EDIT: subtext -->
+    <p>Curated secondhand digital cameras, personally tested and fairly priced. Delivered island-wide in 3–5 business days.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop Now →</button>
+      <!-- EDIT: update href -->
+      <a href="https://t.me/YOUR_CHANNEL" target="_blank" class="btn-secondary">Telegram Channel</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" id="heroStockCount">—</div><div class="lbl">In stock now</div></div>
+      <div class="hero-stat"><div class="num">3–5</div><div class="lbl">Day SG delivery</div></div>
+      <div class="hero-stat"><div class="num">100%</div><div class="lbl">Tested cameras</div></div>
+    </div>
+  </section>
+
+  <!-- SHOP -->
+  <section class="section" id="shop">
+    <div class="section-label">Shop</div>
+    <h2 class="section-title">Available Cameras</h2>
+    <p class="section-desc">All cameras are secondhand, personally inspected, and priced fairly. Stock updates in real time.</p>
+
+    <!-- EDIT: add more brand filters as needed -->
+    <div class="filter-row" id="filterTabs">
+      <button class="filter-tab active" data-brand="all">All</button>
+      <button class="filter-tab" data-brand="canon">Canon</button>
+      <button class="filter-tab" data-brand="sony">Sony</button>
+      <button class="filter-tab" data-brand="fuji">Fuji</button>
+      <button class="filter-tab" data-brand="ricoh">Ricoh</button>
+      <button class="filter-tab" data-brand="olympus">Olympus</button>
+      <button class="filter-tab" data-brand="nikon">Nikon</button>
+    </div>
+
+    <div class="cameras-grid" id="cameraGrid"></div>
+  </section>
+
+  <!-- TELEGRAM STRIP -->
+  <div class="tg-strip">
+    <div>
+      <!-- EDIT: headline -->
+      <h2>New cameras drop weekly.</h2>
+      <p>Join our Telegram channel for first access to new listings and flash deals.</p>
+    </div>
+    <!-- EDIT: update href -->
+    <a href="https://t.me/YOUR_CHANNEL" target="_blank" class="btn-primary">Join Telegram Channel →</a>
+  </div>
+
+  <!-- CONTACT -->
+  <section class="contact-section" id="contact">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="section-label">Contact</div>
+        <h2>Got a question?<br/>We're here.</h2>
+        <p>Leave your question below and we'll reply within a few hours via email.</p>
+        <div class="detail-item">
+          <div class="detail-icon">📦</div>
+          <div><div class="detail-label">Delivery</div><div class="detail-val">3–5 business days, Singapore only</div></div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-icon">💳</div>
+          <div><div class="detail-label">Payment</div><div class="detail-val">Stripe (credit/debit) or PayNow</div></div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-icon">💬</div>
+          <div>
+            <div class="detail-label">Telegram</div>
+            <!-- EDIT: update channel link -->
+            <div class="detail-val"><a href="https://t.me/YOUR_CHANNEL" style="color:var(--rose)">@YOUR_CHANNEL</a></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <form id="digicamEnquiryForm" onsubmit="submitDigicamEnquiry(event)">
+          <div class="form-row">
+            <div class="form-group"><label>Your name</label><input type="text" id="dqName" placeholder="John Tan" required /></div>
+            <div class="form-group"><label>Email</label><input type="email" id="dqEmail" placeholder="john@email.com" required /></div>
+          </div>
+          <div class="form-group">
+            <label>Camera (optional)</label>
+            <select id="dqCamera"><option value="">General question</option></select>
+          </div>
+          <div class="form-group">
+            <label>Your question</label>
+            <textarea id="dqMsg" placeholder="Ask about specs, condition, delivery..." required></textarea>
+          </div>
+          <button type="submit" class="btn-send">Send Question →</button>
+        </form>
+        <div class="form-success" id="digicamFormSuccess">
+          <h3>✅ Sent!</h3>
+          <p>We'll reply via email within a few hours.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end .page-digicam -->
+
+
+<!-- ============================================================
+     PHOTOBOOTH PAGE
+     ============================================================ -->
+<div class="page-photobooth">
+
+  <!-- HERO -->
+  <section class="pb-hero">
+    <div class="pb-tag">Photobooth Rental · Singapore</div>
+    <!-- EDIT: headline -->
+    <h1>
+      Strike a <span class="accent-yellow">pose.</span><br/>
+      <span class="accent-blue">Print</span> the <span class="accent-red">moment.</span>
+    </h1>
+    <!-- EDIT: subtext -->
+    <p>Professional photobooth rental for parties, events, and celebrations. Unlimited prints, colourful backgrounds, and fun props included.</p>
+    <div class="pb-hero-btns">
+      <button class="btn-pb-primary" onclick="document.getElementById('pb-pricing').scrollIntoView({behavior:'smooth'})">See Pricing →</button>
+      <button class="btn-pb-secondary" onclick="document.getElementById('pb-enquiry').scrollIntoView({behavior:'smooth'})">Book Now</button>
+    </div>
+
+    <!-- Background colour swatches preview -->
+    <div class="pb-swatches">
+      <div class="swatch-label"><div class="swatch" style="background:#FFFFFF;border:3px solid #444"></div><div class="swatch-name">White</div></div>
+      <div class="swatch-label"><div class="swatch" style="background:#000000"></div><div class="swatch-name">Black</div></div>
+      <div class="swatch-label"><div class="swatch" style="background:#FF4444"></div><div class="swatch-name">Red</div></div>
+      <div class="swatch-label"><div class="swatch" style="background:#3B82F6"></div><div class="swatch-name">Blue</div></div>
+      <div class="swatch-label"><div class="swatch" style="background:#22C55E"></div><div class="swatch-name">Green</div></div>
+      <div class="swatch-label"><div class="swatch" style="background:#FCD34D"></div><div class="swatch-name">Yellow</div></div>
+      <div class="swatch-label"><div class="swatch" style="background:#F97316"></div><div class="swatch-name">Orange</div></div>
+      <div class="swatch-label"><div class="swatch" style="background:#A855F7"></div><div class="swatch-name">Purple</div></div>
+      <div class="swatch-label"><div class="swatch" style="background:#EC4899"></div><div class="swatch-name">Pink</div></div>
+      <div class="swatch-label"><div class="swatch" style="background: linear-gradient(135deg,#FF6B6B,#4ECDC4,#FCD34D)"></div><div class="swatch-name">Special ✨</div></div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--pb-muted);margin-top:0.8rem">Primary colours included · Special backgrounds available for extra fee</p>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pb-section" id="pb-pricing">
+    <div style="max-width:1100px;margin:0 auto">
+      <div class="pb-section-label">Pricing</div>
+      <h2 class="pb-section-title">Simple, transparent rates</h2>
+      <p class="pb-section-desc">
+        All packages include delivery, setup, unlimited prints, and a primary colour background of your choice.
+        Prices are per hour for up to 50 pax.
+      </p>
+
+      <!-- PRICING CARDS -->
+      <!-- EDIT: update prices, hours, and inclusions as needed -->
+      <div class="pricing-grid">
+
+        <div class="pricing-card">
+          <div class="pricing-name">Starter</div>
+          <div class="pricing-price">S$120 <span>/ hr</span></div>
+          <div class="pricing-sub">Perfect for intimate gatherings up to 50 pax.</div>
+          <ul class="pricing-list">
+            <li>Up to 50 pax</li>
+            <li>Unlimited photo prints</li>
+            <li>1 primary colour background</li>
+            <li>Delivery & setup included</li>
+            <li>Printer + ink + plastic covers</li>
+            <li class="extra">Props available (+extra fee)</li>
+            <li class="extra">Special backgrounds (+extra fee)</li>
+          </ul>
+          <button class="btn-pb-primary" style="width:100%" onclick="document.getElementById('pb-enquiry').scrollIntoView({behavior:'smooth'})">Book Now</button>
+        </div>
+
+        <div class="pricing-card featured">
+          <div class="pricing-name">Party Pack</div>
+          <div class="pricing-price">S$120 <span>/ hr</span></div>
+          <div class="pricing-sub">Ideal for birthday parties and corporate events.</div>
+          <ul class="pricing-list">
+            <li>Up to 50 pax</li>
+            <li>Unlimited photo prints</li>
+            <li>Choice of primary colour background</li>
+            <li>Delivery & setup included</li>
+            <li>Printer + ink + plastic covers</li>
+            <li>On-site attendant available</li>
+            <li class="extra">Props package (+extra fee)</li>
+            <li class="extra">Special / themed backgrounds (+extra fee)</li>
+          </ul>
+          <button class="btn-pb-primary" style="width:100%" onclick="document.getElementById('pb-enquiry').scrollIntoView({behavior:'smooth'})">Book Now</button>
+        </div>
+
+        <div class="pricing-card">
+          <div class="pricing-name">Custom</div>
+          <div class="pricing-price">Contact <span>us</span></div>
+          <div class="pricing-sub">Large events, full-day bookings, or bespoke setups.</div>
+          <ul class="pricing-list">
+            <li>50+ pax</li>
+            <li>Unlimited photo prints</li>
+            <li>Multiple backgrounds</li>
+            <li>Full props package</li>
+            <li>Full day / multi-day options</li>
+            <li>Custom branding on prints</li>
+            <li class="extra">Tailored quote provided</li>
+          </ul>
+          <button class="btn-pb-secondary" style="width:100%;border-color:var(--pb-border)" onclick="document.getElementById('pb-enquiry').scrollIntoView({behavior:'smooth'})">Get a Quote</button>
+        </div>
+
+      </div>
+
+      <!-- NIGHT SURCHARGE NOTICE -->
+      <!-- EDIT: update the time and surcharge amount -->
+      <div class="surcharge-box">
+        <div class="surcharge-icon">🌙</div>
+        <div>
+          <div class="surcharge-title">Night Surcharge — +S$30/hr after 10pm</div>
+          <div class="surcharge-desc">
+            Bookings that extend past <strong style="color:var(--pb-red)">10:00pm</strong> will incur a night surcharge of
+            <strong style="color:var(--pb-red)">S$30 per hour</strong> on top of the base rate.
+            This covers late-night logistics, transport, and staff costs.
+            Plan your booking accordingly to avoid unexpected charges!
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BACKGROUNDS & PROPS -->
+  <section class="pb-section" style="padding-top:0">
+    <div style="max-width:1100px;margin:0 auto">
+      <div class="pb-section-label">Backgrounds & Props</div>
+      <h2 class="pb-section-title">Set the scene</h2>
+      <p class="pb-section-desc">Choose from our primary colour backgrounds (included) or upgrade to a special background for an extra fee. Props are available as an add-on.</p>
+
+      <div class="bg-grid">
+        <!-- Primary backgrounds (included) -->
+        <div class="bg-card">
+          <div class="bg-swatch" style="background:#FFFFFF;color:#000">🏳️</div>
+          <div class="bg-info"><div class="bg-name">White</div><div class="bg-price">Included</div></div>
+        </div>
+        <div class="bg-card">
+          <div class="bg-swatch" style="background:#000000">🖤</div>
+          <div class="bg-info"><div class="bg-name">Black</div><div class="bg-price">Included</div></div>
+        </div>
+        <div class="bg-card">
+          <div class="bg-swatch" style="background:#FF4444">❤️</div>
+          <div class="bg-info"><div class="bg-name">Red</div><div class="bg-price">Included</div></div>
+        </div>
+        <div class="bg-card">
+          <div class="bg-swatch" style="background:#3B82F6">💙</div>
+          <div class="bg-info"><div class="bg-name">Blue</div><div class="bg-price">Included</div></div>
+        </div>
+        <div class="bg-card">
+          <div class="bg-swatch" style="background:#22C55E">💚</div>
+          <div class="bg-info"><div class="bg-name">Green</div><div class="bg-price">Included</div></div>
+        </div>
+        <div class="bg-card">
+          <div class="bg-swatch" style="background:#FCD34D;color:#000">💛</div>
+          <div class="bg-info"><div class="bg-name">Yellow</div><div class="bg-price">Included</div></div>
+        </div>
+        <div class="bg-card">
+          <div class="bg-swatch" style="background:#F97316">🧡</div>
+          <div class="bg-info"><div class="bg-name">Orange</div><div class="bg-price">Included</div></div>
+        </div>
+        <div class="bg-card">
+          <div class="bg-swatch" style="background:#A855F7">💜</div>
+          <div class="bg-info"><div class="bg-name">Purple</div><div class="bg-price">Included</div></div>
+        </div>
+        <div class="bg-card">
+          <div class="bg-swatch" style="background:#EC4899">🩷</div>
+          <div class="bg-info"><div class="bg-name">Pink</div><div class="bg-price">Included</div></div>
+        </div>
+        <!-- Special backgrounds (extra fee) -->
+        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+          <div class="bg-swatch" style="background:linear-gradient(135deg,#FF6B6B,#4ECDC4,#FCD34D)">✨</div>
+          <div class="bg-info"><div class="bg-name">Rainbow Gradient</div><div class="bg-price extra">Extra fee — ask us</div></div>
+        </div>
+        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+          <div class="bg-swatch" style="background:radial-gradient(circle,#1a1a2e,#16213e,#0f3460)">🌌</div>
+          <div class="bg-info"><div class="bg-name">Galaxy / Night Sky</div><div class="bg-price extra">Extra fee — ask us</div></div>
+        </div>
+        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+          <div class="bg-swatch" style="background:linear-gradient(135deg,#f8b4d9,#fde8f3,#d8b4fe)">🌸</div>
+          <div class="bg-info"><div class="bg-name">Pastel Dream</div><div class="bg-price extra">Extra fee — ask us</div></div>
+        </div>
+        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+          <div class="bg-swatch" style="background:repeating-linear-gradient(45deg,#FFD700 0px,#FFD700 10px,#1a1a2e 10px,#1a1a2e 20px)">🎉</div>
+          <div class="bg-info"><div class="bg-name">Party Stripes</div><div class="bg-price extra">Extra fee — ask us</div></div>
+        </div>
+        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+          <div class="bg-swatch" style="background:linear-gradient(135deg,#ffffff,#f0f0f0);color:#333;font-size:1rem">🎄</div>
+          <div class="bg-info"><div class="bg-name">Seasonal / Custom</div><div class="bg-price extra">Extra fee — ask us</div></div>
+        </div>
+      </div>
+
+      <!-- Props note -->
+      <div class="surcharge-box" style="border-color:rgba(252,211,77,0.25);background:rgba(252,211,77,0.06)">
+        <div class="surcharge-icon">🎭</div>
+        <div>
+          <div class="surcharge-title" style="color:var(--pb-yellow)">Props Package — available at extra cost</div>
+          <div class="surcharge-desc">
+            We provide a fun selection of props including hats, glasses, signs, and themed accessories.
+            Props are available as an add-on to any package.
+            Contact us for current pricing and availability — we update our props collection regularly!
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PHOTOBOOTH ENQUIRY FORM -->
+  <section class="pb-contact" id="pb-enquiry">
+    <div class="pb-form-wrap">
+      <div class="pb-section-label">Book a Photobooth</div>
+      <h2 class="pb-section-title">Let's make it happen</h2>
+      <p class="pb-section-desc">Fill in the form below and we'll get back to you within a few hours to confirm availability and finalise pricing.</p>
+
+      <form id="pbEnquiryForm" onsubmit="submitPbEnquiry(event)">
+        <div class="pb-form-row">
+          <div class="pb-form-group"><label>Your name</label><input type="text" id="pbName" placeholder="Jane Tan" required /></div>
+          <div class="pb-form-group"><label>Email</label><input type="email" id="pbEmail" placeholder="jane@email.com" required /></div>
+        </div>
+        <div class="pb-form-row">
+          <div class="pb-form-group">
+            <label>Event date</label>
+            <input type="date" id="pbDate" required />
+          </div>
+          <div class="pb-form-group">
+            <label>Event time</label>
+            <input type="time" id="pbTime" required />
+          </div>
+        </div>
+        <div class="pb-form-row">
+          <div class="pb-form-group">
+            <label>Duration (hours)</label>
+            <select id="pbHours">
+              <option value="1">1 hour — S$120</option>
+              <option value="2">2 hours — S$240</option>
+              <option value="3" selected>3 hours — S$360</option>
+              <option value="4">4 hours — S$480</option>
+              <option value="5">5 hours — S$600</option>
+              <option value="custom">Custom — I'll specify below</option>
+            </select>
+          </div>
+          <div class="pb-form-group">
+            <label>Expected pax</label>
+            <input type="number" id="pbPax" placeholder="e.g. 30" min="1" required />
+          </div>
+        </div>
+        <div class="pb-form-group">
+          <label>Background preference</label>
+          <select id="pbBackground">
+            <option value="white">White (included)</option>
+            <option value="black">Black (included)</option>
+            <option value="red">Red (included)</option>
+            <option value="blue">Blue (included)</option>
+            <option value="green">Green (included)</option>
+            <option value="yellow">Yellow (included)</option>
+            <option value="orange">Orange (included)</option>
+            <option value="purple">Purple (included)</option>
+            <option value="pink">Pink (included)</option>
+            <option value="special">Special / Custom background (+extra fee)</option>
+          </select>
+        </div>
+        <div class="pb-form-group">
+          <label>Props? <span style="color:var(--pb-muted);font-weight:400">(extra cost applies)</span></label>
+          <select id="pbProps">
+            <option value="no">No props needed</option>
+            <option value="yes">Yes, I'd like props (+extra fee)</option>
+          </select>
+        </div>
+        <div class="pb-form-group">
+          <label>Event location / venue</label>
+          <input type="text" id="pbVenue" placeholder="e.g. Suntec City Convention Centre" required />
+        </div>
+        <div class="pb-form-group">
+          <label>Anything else we should know?</label>
+          <textarea id="pbNotes" placeholder="Theme, special requests, or questions..."></textarea>
+        </div>
+        <button type="submit" class="btn-pb-send">Send Booking Enquiry →</button>
+      </form>
+
+      <div class="pb-form-success" id="pbFormSuccess">
+        <h3>✅ Enquiry received!</h3>
+        <p>We'll get back to you within a few hours to confirm availability and pricing.</p>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end .page-photobooth -->
+
+
+<!-- ============================================================
+     TELEGRAM STRIP (shared)
+     ============================================================ -->
+<div class="tg-strip">
+  <div>
+    <h2>Stay in the loop.</h2>
+    <p>Join our Telegram channel for new camera drops, photobooth deals, and flash promos.</p>
+  </div>
+  <!-- EDIT: update href -->
+  <a href="https://t.me/YOUR_CHANNEL" target="_blank" class="btn-primary">Join @DigicamVenture →</a>
+</div>
+
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Digicam<span>Venture</span></div>
+      <!-- EDIT: tagline -->
+      <p class="footer-tagline">Secondhand cameras & photobooth rental in Singapore. Quality gear, fairly priced, delivered fast.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Digicams</h4>
+      <a href="#" onclick="switchTab('digicam')">All cameras</a>
+      <a href="#" onclick="switchTab('digicam')">Canon</a>
+      <a href="#" onclick="switchTab('digicam')">Sony</a>
+      <a href="#" onclick="switchTab('digicam')">Fuji & Ricoh</a>
+    </div>
+    <div class="footer-col">
+      <h4>Photobooth</h4>
+      <a href="#" onclick="switchTab('photobooth')">Pricing</a>
+      <a href="#" onclick="switchTab('photobooth')">Backgrounds</a>
+      <a href="#" onclick="switchTab('photobooth')">Book now</a>
+      <!-- EDIT: update href -->
+      <a href="https://t.me/YOUR_CHANNEL" target="_blank">Telegram</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 DigicamVenture · Singapore</div>
+    <div class="footer-pills">
+      <span class="footer-pill">STRIPE</span>
+      <span class="footer-pill">PAYNOW</span>
+      <span class="footer-pill">SG ONLY</span>
+      <span class="footer-pill">PHOTOBOOTH</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ============================================================
+     BUY MODAL (digicams)
+     ============================================================ -->
+<div class="modal-overlay" id="buyModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-step active" id="step1">
+      <div class="modal-title" id="modalCamName">Buy this camera</div>
+      <div class="modal-sub">Choose how you'd like to pay</div>
+      <div class="pay-options">
+        <div class="pay-opt selected" id="optPaynow" onclick="selectPay('paynow')">📱 PayNow</div>
+        <div class="pay-opt" id="optCard" onclick="selectPay('card')">💳 Credit Card</div>
+      </div>
+      <div id="paynowPanel">
+        <div class="paynow-box">
+          <div class="paynow-label">Send payment to</div>
+          <!-- EDIT: update with your real PayNow number -->
+          <div class="paynow-num">+65 8518 7046</div>
+          <div class="paynow-label">Amount: <strong id="pnAmount" style="color:var(--pink)">S$0</strong></div>
+          <div class="timer" id="pnTimer">Proceeding in 10:00 after you pay...</div>
+        </div>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin:0.8rem 0 1rem">Transfer the exact amount via PayNow. We'll continue after the timer.</p>
+        <button class="btn-primary" style="width:100%" onclick="goStep2()">I've paid — continue →</button>
+      </div>
+      <div id="cardPanel" style="display:none">
+        <p style="font-size:0.9rem;color:var(--text-soft);margin-bottom:1.2rem">You'll be redirected to our secure Stripe checkout.</p>
+        <button class="btn-primary" style="width:100%" onclick="goStep2()">Pay with Stripe →</button>
+      </div>
+    </div>
+    <div class="modal-step" id="step2">
+      <div class="modal-title">Delivery details</div>
+      <div class="modal-sub">Almost done — where should we send it?</div>
+      <div class="form-group"><label>Full delivery address</label><textarea id="mAddress" placeholder="Block, street, unit, postal code" style="min-height:80px"></textarea></div>
+      <div class="form-group"><label>Phone number</label><input type="tel" id="mPhone" placeholder="+65 9xxx xxxx" /></div>
+      <button class="btn-primary" style="width:100%;margin-top:0.5rem" onclick="goStep3()">Confirm Order →</button>
+    </div>
+    <div class="modal-step" id="step3">
+      <div class="success-screen">
+        <div class="success-icon">🎉</div>
+        <h3>Order confirmed!</h3>
+        <p>Thank you for your purchase! We'll ship within 1–2 business days and message you when it's on the way.</p>
+        <br/>
+        <button class="btn-primary" onclick="closeModal()">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     CHAT WIDGET
+     ============================================================ -->
+<button class="chat-bubble" onclick="toggleChat()" aria-label="Chat">📷</button>
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-av">📷</div>
+    <div>
+      <div class="chat-name">DigicamVenture Assistant</div>
+      <div class="chat-online">Online now ✓</div>
+    </div>
+    <button class="chat-x" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-msgs" id="chatMsgs">
+    <div class="chat-msg bot"><div class="chat-msg-bubble">👋 Hi! Ask me anything about our cameras, photobooth rental, delivery, or payment!</div></div>
+  </div>
+  <div class="chat-input-row">
+    <input id="chatInput" class="chat-input" placeholder="Type a message…" onkeydown="if(event.key==='Enter')sendChat()" />
+    <button id="chatSend" onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+
+  /* ----------------------------------------------------------
+     SETTINGS — update these
+     ---------------------------------------------------------- */
+  const BACKEND_URL = "https://digicam-venture.onrender.com";
+  // EDIT: update with your real PayNow number
+  const PAYNOW_NUMBER = "+65 8518 7046";
+
+
+  /* ----------------------------------------------------------
+     TAB SWITCHING
+     ---------------------------------------------------------- */
+  function switchTab(tab) {
+    const tabs = document.querySelectorAll('.nav-tab');
+    tabs[0].classList.toggle('active', tab === 'digicam');
+    tabs[1].classList.toggle('active', tab === 'photobooth');
+    document.body.classList.toggle('pb-mode', tab === 'photobooth');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function scrollToSection(sectionId, tab) {
+    switchTab(tab);
+    setTimeout(() => {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 300);
+  }
+
+
+  /* ----------------------------------------------------------
+     CAMERA DATA — loaded live from backend
+     ---------------------------------------------------------- */
+  let CAMERAS_DATA = [];
+
+  function getEmoji(brand) {
+    const map = {
+      "Canon":"📷","Sony":"📸","Fuji":"🎞️","Fujifilm":"🎞️",
+      "Ricoh":"🔴","Nikon":"📷","Olympus":"🏕️","Panasonic":"📹","Leica":"⚫"
+    };
+    return map[brand] || "📷";
+  }
+
+  async function loadInventory() {
+    try {
+      const res  = await fetch(BACKEND_URL + "/api/inventory");
+      const data = await res.json();
+      CAMERAS_DATA = data.cameras.map(c => ({ ...c, emoji: getEmoji(c.brand) }));
+    } catch (e) {
+      console.log("Could not load inventory:", e);
+      CAMERAS_DATA = [];
+    }
+    renderCameras(CAMERAS_DATA);
+    populateCameraDropdown();
+  }
+
+  function badgeClass(condition) {
+    if (condition === "Like New")  return "badge-like-new";
+    if (condition === "Excellent") return "badge-excellent";
+    return "badge-good";
+  }
+
+  function renderCameras(list) {
+    const grid = document.getElementById("cameraGrid");
+    if (!list.length) {
+      grid.innerHTML = '<p style="color:var(--text-muted);grid-column:1/-1;text-align:center;padding:3rem">No cameras found.</p>';
+      return;
+    }
+    grid.innerHTML = list.map(c => `
+      <div class="camera-card${c.stock === 0 ? ' sold-out' : ''}" style="${c.stock === 0 ? 'opacity:0.55;pointer-events:none' : ''}">
+        <div class="card-img">
+          <img
+            src="https://digicamventure.github.io/images/${c.id}.jpg"
+            alt="${c.brand} ${c.model}"
+            onerror="this.classList.add('hidden');this.nextElementSibling.style.display='block'"
+          />
+          <span class="fallback-emoji" style="display:none">${c.emoji}</span>
+          <span class="badge ${badgeClass(c.condition)}">${c.condition}</span>
+          ${c.stock === 0 ? '<span class="badge-sold">Sold Out</span>' : ''}
+        </div>
+        <div class="card-body">
+          <div class="card-brand">${c.brand}</div>
+          <div class="card-name">${c.model}</div>
+          <div class="card-meta">${c.year} · ${c.stock > 0 ? c.stock + ' unit' + (c.stock > 1 ? 's' : '') + ' left' : 'Out of stock'}</div>
+          <div class="card-price">S$${c.price.toLocaleString()}</div>
+          <div class="card-actions">
+            ${c.stock > 0 ? `<button class="btn-card" onclick='openModal("${c.id}","${c.brand} ${c.model}",${c.price})'>Buy →</button>` : ''}
+            <button class="btn-ask" onclick="askAbout('${c.brand} ${c.model}')">Ask</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('heroStockCount').textContent = CAMERAS_DATA.filter(c => c.stock > 0).length;
+  }
+
+  function populateCameraDropdown() {
+    const sel = document.getElementById('dqCamera');
+    sel.innerHTML = '<option value="">General question</option>' +
+      CAMERAS_DATA.map(c => `<option value="${c.brand} ${c.model}">${c.brand} ${c.model}</option>`).join('');
+  }
+
+  // Filter tabs
+  document.getElementById('filterTabs').addEventListener('click', e => {
+    const tab = e.target.closest('.filter-tab');
+    if (!tab) return;
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const brand = tab.dataset.brand;
+    renderCameras(brand === 'all' ? CAMERAS_DATA : CAMERAS_DATA.filter(c => c.brand.toLowerCase() === brand));
+  });
+
+  loadInventory();
+
+
+  /* ----------------------------------------------------------
+     BUY MODAL
+     ---------------------------------------------------------- */
+  let activeCamId = null;
+  let timerInterval;
+
+  function openModal(id, name, price) {
+    activeCamId = id;
+    document.getElementById('modalCamName').textContent = 'Buy · ' + name;
+    document.getElementById('pnAmount').textContent = 'S$' + price.toLocaleString();
+    showStep('step1');
+    selectPay('paynow');
+    startTimer();
+    document.getElementById('buyModal').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('buyModal').classList.remove('open');
+    clearInterval(timerInterval);
+  }
+
+  function showStep(id) {
+    document.querySelectorAll('.modal-step').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function selectPay(type) {
+    document.getElementById('optPaynow').classList.toggle('selected', type === 'paynow');
+    document.getElementById('optCard').classList.toggle('selected',   type === 'card');
+    document.getElementById('paynowPanel').style.display = type === 'paynow' ? '' : 'none';
+    document.getElementById('cardPanel').style.display   = type === 'card'   ? '' : 'none';
+  }
+
+  function startTimer() {
+    clearInterval(timerInterval);
+    let secs = 600;
+    const el = document.getElementById('pnTimer');
+    timerInterval = setInterval(() => {
+      if (secs <= 0) { clearInterval(timerInterval); return; }
+      secs--;
+      const m = String(Math.floor(secs / 60)).padStart(2,'0');
+      const s = String(secs % 60).padStart(2,'0');
+      el.textContent = `Proceeding in ${m}:${s} after you pay...`;
+    }, 1000);
+  }
+
+  function goStep2() { showStep('step2'); }
+
+  async function goStep3() {
+    const address = document.getElementById('mAddress').value.trim();
+    const phone   = document.getElementById('mPhone').value.trim();
+    if (!address || !phone) { alert('Please fill in your address and phone number.'); return; }
+
+    const cam = CAMERAS_DATA.find(c => c.id === activeCamId);
+    try {
+      await fetch(BACKEND_URL + '/api/sale', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          camera_id:     activeCamId,
+          sale_price:    cam ? cam.price : 0,
+          channel:       'Website',
+          buyer_contact: 'website',
+          buyer_address: address,
+          buyer_phone:   phone,
+        })
+      });
+    } catch (e) { console.log('Backend not reachable:', e); }
+
+    if (cam) cam.stock = Math.max(0, cam.stock - 1);
+    renderCameras(CAMERAS_DATA);
+    showStep('step3');
+    clearInterval(timerInterval);
+  }
+
+  document.getElementById('buyModal').addEventListener('click', e => {
+    if (e.target === document.getElementById('buyModal')) closeModal();
+  });
+
+
+  /* ----------------------------------------------------------
+     DIGICAM ENQUIRY FORM
+     ---------------------------------------------------------- */
+  async function submitDigicamEnquiry(e) {
+    e.preventDefault();
+    const payload = {
+      name:    document.getElementById('dqName').value,
+      email:   document.getElementById('dqEmail').value,
+      camera:  document.getElementById('dqCamera').value,
+      message: document.getElementById('dqMsg').value,
+      type:    'digicam',
+    };
+    try {
+      await fetch(BACKEND_URL + '/api/enquiry', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) { console.log('Backend not reachable:', e); }
+    document.getElementById('digicamEnquiryForm').style.display = 'none';
+    document.getElementById('digicamFormSuccess').style.display = 'block';
+  }
+
+
+  /* ----------------------------------------------------------
+     PHOTOBOOTH ENQUIRY FORM
+     ---------------------------------------------------------- */
+  async function submitPbEnquiry(e) {
+    e.preventDefault();
+    const hours  = document.getElementById('pbHours').value;
+    const date   = document.getElementById('pbDate').value;
+    const time   = document.getElementById('pbTime').value;
+    const pax    = document.getElementById('pbPax').value;
+    const bg     = document.getElementById('pbBackground').value;
+    const props  = document.getElementById('pbProps').value;
+    const venue  = document.getElementById('pbVenue').value;
+    const notes  = document.getElementById('pbNotes').value;
+
+    // Calculate estimated cost (simple — night surcharge check)
+    const startHour = parseInt(time.split(':')[0]);
+    const endHour   = startHour + (isNaN(parseInt(hours)) ? 3 : parseInt(hours));
+    const nightHrs  = Math.max(0, endHour - 22);
+    const baseHrs   = (isNaN(parseInt(hours)) ? 3 : parseInt(hours)) - nightHrs;
+    const estimate  = baseHrs * 120 + nightHrs * 150;
+
+    const message = [
+      `Photobooth booking enquiry`,
+      `Name: ${document.getElementById('pbName').value}`,
+      `Email: ${document.getElementById('pbEmail').value}`,
+      `Date: ${date}`,
+      `Start time: ${time}`,
+      `Duration: ${hours} hour(s)`,
+      `Pax: ${pax}`,
+      `Background: ${bg}`,
+      `Props: ${props}`,
+      `Venue: ${venue}`,
+      nightHrs > 0 ? `Night surcharge applies: ~${nightHrs} hr(s) past 10pm` : `No night surcharge`,
+      !isNaN(estimate) ? `Estimated cost: S$${estimate} (excl. extras)` : '',
+      notes ? `Notes: ${notes}` : '',
+    ].filter(Boolean).join('\n');
+
+    try {
+      await fetch(BACKEND_URL + '/api/enquiry', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:    document.getElementById('pbName').value,
+          email:   document.getElementById('pbEmail').value,
+          camera:  'Photobooth Rental',
+          message: message,
+          type:    'photobooth',
+        })
+      });
+    } catch (e) { console.log('Backend not reachable:', e); }
+
+    document.getElementById('pbEnquiryForm').style.display = 'none';
+    document.getElementById('pbFormSuccess').style.display = 'block';
+  }
+
+
+  /* ----------------------------------------------------------
+     CHAT WIDGET
+     ---------------------------------------------------------- */
+  function toggleChat() {
+    document.getElementById('chatWindow').classList.toggle('open');
+  }
+
+  function askAbout(model) {
+    if (!document.getElementById('chatWindow').classList.contains('open')) toggleChat();
+    document.getElementById('chatInput').value = 'Tell me about the ' + model;
+    sendChat();
+  }
+
+  function addMsg(text, who) {
+    const msgs = document.getElementById('chatMsgs');
+    const div  = document.createElement('div');
+    div.className = 'chat-msg ' + who;
+    div.innerHTML = `<div class="chat-msg-bubble">${text}</div>`;
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  function addTyping() {
+    const msgs = document.getElementById('chatMsgs');
+    const div  = document.createElement('div');
+    div.className = 'chat-msg bot';
+    div.innerHTML = '<div class="chat-msg-bubble">...</div>';
+    msgs.appendChild(div);
+    msgs.scrollTop = msgs.scrollHeight;
+    return div;
+  }
+
+  async function sendChat() {
+    const input = document.getElementById('chatInput');
+    const text  = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    addMsg(text, 'user');
+    const typing = addTyping();
+
+    try {
+      const res  = await fetch(BACKEND_URL + '/api/chat', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, inventory: CAMERAS_DATA })
+      });
+      const data = await res.json();
+      typing.remove();
+      addMsg(data.reply, 'bot');
+    } catch (e) {
+      typing.remove();
+      const q = text.toLowerCase();
+      let reply = "I'm having trouble connecting right now. Please use the contact form below!";
+      if (q.includes('deliver'))    reply = "We deliver island-wide in Singapore within 3-5 business days.";
+      if (q.includes('pay'))        reply = "We accept PayNow and credit card via Stripe.";
+      if (q.includes('photobooth')) reply = "Our photobooth rental starts from S$120/hr for up to 50 pax, including unlimited prints and delivery! Use the Photobooth tab above to see full pricing.";
+      if (q.includes('background')) reply = "We provide all primary colours included in the base price. Special/themed backgrounds are available for an extra fee — enquire via the Photobooth tab!";
+      if (q.includes('props'))      reply = "Props are available as an add-on at extra cost. Enquire via the Photobooth booking form!";
+      if (q.includes('surcharge') || q.includes('night')) reply = "Bookings that run past 10pm incur a night surcharge of S$30/hr on top of the base rate.";
+      addMsg(reply, 'bot');
+    }
+  }
+
+</script>
+
+</body>
+</html>
