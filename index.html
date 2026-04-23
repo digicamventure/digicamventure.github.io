@@ -777,6 +777,80 @@
       .pricing-grid { grid-template-columns:1fr; }
     }
 
+    /* Background preview lightbox */
+.bg-preview-overlay {
+  position: fixed; inset: 0; z-index: 600;
+  background: rgba(0,0,0,0.85);
+  display: flex; align-items: center; justify-content: center;
+  padding: 1rem;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.bg-preview-overlay.open { opacity: 1; pointer-events: all; }
+
+.bg-preview-modal {
+  background: var(--pb-card);
+  border: 1px solid var(--pb-border);
+  border-radius: 20px;
+  width: 100%; max-width: 560px;
+  padding: 1.5rem;
+  transform: translateY(20px);
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+  max-height: 90vh; overflow-y: auto;
+}
+.bg-preview-overlay.open .bg-preview-modal { transform: translateY(0); }
+
+.bg-preview-header {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.bg-preview-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem; color: var(--pb-text);
+}
+.bg-preview-close {
+  background: rgba(255,255,255,0.08); border: none;
+  color: var(--pb-muted); width: 30px; height: 30px;
+  border-radius: 50%; cursor: pointer; font-size: 0.9rem;
+}
+.bg-preview-swatch {
+  height: 80px; border-radius: 12px;
+  margin-bottom: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+}
+.bg-preview-note {
+  font-size: 0.82rem; color: var(--pb-muted);
+  margin-bottom: 1.2rem; line-height: 1.55;
+}
+.bg-preview-links {
+  display: flex; flex-direction: column; gap: 0.6rem;
+}
+.bg-preview-link {
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.7rem 1rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--pb-border);
+  border-radius: 10px;
+  color: var(--pb-text); font-size: 0.875rem; font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+.bg-preview-link:hover {
+  background: rgba(59,130,246,0.1);
+  border-color: var(--pb-blue);
+}
+.bg-preview-link-icon { font-size: 1.1rem; }
+.bg-preview-own {
+  margin-top: 1rem; padding: 0.8rem 1rem;
+  background: rgba(252,211,77,0.08);
+  border: 1px solid rgba(252,211,77,0.2);
+  border-radius: 10px;
+  font-size: 0.8rem; color: var(--pb-muted); line-height: 1.55;
+}
+.bg-preview-own span { color: var(--pb-yellow); font-weight: 700; }
+
   </style>
 </head>
 <body>
@@ -1094,60 +1168,60 @@
 
       <div class="bg-grid">
         <!-- Primary backgrounds (included) -->
-        <div class="bg-card">
+        <div class="bg-card" onclick="openBgPreview('white')" style="cursor:pointer">
           <div class="bg-swatch" style="background:#FFFFFF;color:#000">🏳️</div>
           <div class="bg-info"><div class="bg-name">White</div><div class="bg-price">Included</div></div>
         </div>
-        <div class="bg-card">
+        <div class="bg-card" onclick="openBgPreview('black')" style="cursor:pointer">
           <div class="bg-swatch" style="background:#000000">🖤</div>
           <div class="bg-info"><div class="bg-name">Black</div><div class="bg-price">Included</div></div>
         </div>
-        <div class="bg-card">
+        <div class="bg-card" onclick="openBgPreview('red')" style="cursor:pointer">
           <div class="bg-swatch" style="background:#FF4444">❤️</div>
           <div class="bg-info"><div class="bg-name">Red</div><div class="bg-price">Included</div></div>
         </div>
-        <div class="bg-card">
+        <div class="bg-card" onclick="openBgPreview('blue')" style="cursor:pointer">
           <div class="bg-swatch" style="background:#3B82F6">💙</div>
           <div class="bg-info"><div class="bg-name">Blue</div><div class="bg-price">Included</div></div>
         </div>
-        <div class="bg-card">
+        <div class="bg-card" onclick="openBgPreview('green')" style="cursor:pointer">
           <div class="bg-swatch" style="background:#22C55E">💚</div>
           <div class="bg-info"><div class="bg-name">Green</div><div class="bg-price">Included</div></div>
         </div>
-        <div class="bg-card">
+        <div class="bg-card" onclick="openBgPreview('yellow')" style="cursor:pointer">
           <div class="bg-swatch" style="background:#FCD34D;color:#000">💛</div>
           <div class="bg-info"><div class="bg-name">Yellow</div><div class="bg-price">Included</div></div>
         </div>
-        <div class="bg-card">
+        <div class="bg-card" onclick="openBgPreview('orange')" style="cursor:pointer">
           <div class="bg-swatch" style="background:#F97316">🧡</div>
           <div class="bg-info"><div class="bg-name">Orange</div><div class="bg-price">Included</div></div>
         </div>
-        <div class="bg-card">
+        <div class="bg-card" onclick="openBgPreview('purple')" style="cursor:pointer">
           <div class="bg-swatch" style="background:#A855F7">💜</div>
           <div class="bg-info"><div class="bg-name">Purple</div><div class="bg-price">Included</div></div>
         </div>
-        <div class="bg-card">
+        <div class="bg-card" onclick="openBgPreview('pink')" style="cursor:pointer">
           <div class="bg-swatch" style="background:#EC4899">🩷</div>
           <div class="bg-info"><div class="bg-name">Pink</div><div class="bg-price">Included</div></div>
         </div>
         <!-- Special backgrounds (extra fee) -->
-        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+        <div class="bg-card" onclick="openBgPreview('rainbow')" style="border-color:rgba(252,211,77,0.4);cursor:pointer">
           <div class="bg-swatch" style="background:linear-gradient(135deg,#FF6B6B,#4ECDC4,#FCD34D)">✨</div>
           <div class="bg-info"><div class="bg-name">Rainbow Gradient</div><div class="bg-price extra">Extra fee — ask us</div></div>
         </div>
-        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+        <<div class="bg-card" onclick="openBgPreview('galaxy')" style="border-color:rgba(252,211,77,0.4);cursor:pointer">
           <div class="bg-swatch" style="background:radial-gradient(circle,#1a1a2e,#16213e,#0f3460)">🌌</div>
           <div class="bg-info"><div class="bg-name">Galaxy / Night Sky</div><div class="bg-price extra">Extra fee — ask us</div></div>
         </div>
-        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+        <div class="bg-card" onclick="openBgPreview('pastel')" style="border-color:rgba(252,211,77,0.4);cursor:pointer">
           <div class="bg-swatch" style="background:linear-gradient(135deg,#f8b4d9,#fde8f3,#d8b4fe)">🌸</div>
           <div class="bg-info"><div class="bg-name">Pastel Dream</div><div class="bg-price extra">Extra fee — ask us</div></div>
         </div>
-        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+        <div class="bg-card" onclick="openBgPreview('stripes')" style="border-color:rgba(252,211,77,0.4);cursor:pointer">
           <div class="bg-swatch" style="background:repeating-linear-gradient(45deg,#FFD700 0px,#FFD700 10px,#1a1a2e 10px,#1a1a2e 20px)">🎉</div>
           <div class="bg-info"><div class="bg-name">Party Stripes</div><div class="bg-price extra">Extra fee — ask us</div></div>
         </div>
-        <div class="bg-card" style="border-color:rgba(252,211,77,0.4)">
+        <div class="bg-card" onclick="openBgPreview('seasonal')" style="border-color:rgba(252,211,77,0.4);cursor:pointer">
           <div class="bg-swatch" style="background:linear-gradient(135deg,#ffffff,#f0f0f0);color:#333;font-size:1rem">🎄</div>
           <div class="bg-info"><div class="bg-name">Seasonal / Custom</div><div class="bg-price extra">Extra fee — ask us</div></div>
         </div>
@@ -1783,7 +1857,188 @@ function selectSwatch(labelEl, colour, value) {
   if (sel) sel.value = value;
 }
 
+/* ----------------------------------------------------------
+   BACKGROUND PREVIEW POPUP
+   ---------------------------------------------------------- */
+const BG_PREVIEW_DATA = {
+  white: {
+    name: 'White Background',
+    style: 'background:#FFFFFF',
+    emoji: '🏳️',
+    note: 'A clean white background gives a crisp, modern look. Great for corporate events, minimalist aesthetics, and making colours in outfits pop.',
+    searches: [
+      { label: 'Photobooth white background examples', q: 'photobooth white background people party' },
+      { label: 'White backdrop event photos', q: 'white backdrop photo booth event singapore' },
+    ]
+  },
+  black: {
+    name: 'Black Background',
+    style: 'background:#111111',
+    emoji: '🖤',
+    note: 'A sleek black background adds drama and sophistication. Perfect for prom nights, dinner events, and glamorous parties.',
+    searches: [
+      { label: 'Photobooth black background examples', q: 'photobooth black background glamour party' },
+      { label: 'Black backdrop event photos', q: 'black backdrop photo booth prom night' },
+    ]
+  },
+  red: {
+    name: 'Red Background',
+    style: 'background:#FF4444',
+    emoji: '❤️',
+    note: 'Bold and energetic — red backgrounds create vibrant, eye-catching photos. Ideal for Chinese New Year, Valentine\'s Day, or any high-energy event.',
+    searches: [
+      { label: 'Photobooth red background examples', q: 'photobooth red background chinese new year party' },
+      { label: 'Red backdrop event photos', q: 'red backdrop photo booth valentine celebration' },
+    ]
+  },
+  blue: {
+    name: 'Blue Background',
+    style: 'background:#3B82F6',
+    emoji: '💙',
+    note: 'Cool and calming — blue works beautifully for corporate events, graduation parties, and sports-themed celebrations.',
+    searches: [
+      { label: 'Photobooth blue background examples', q: 'photobooth blue background corporate event graduation' },
+      { label: 'Blue backdrop event photos', q: 'blue backdrop photo booth party photos' },
+    ]
+  },
+  green: {
+    name: 'Green Background',
+    style: 'background:#22C55E',
+    emoji: '💚',
+    note: 'Fresh and lively — green suits nature-themed events, St. Patrick\'s Day, and outdoor garden parties.',
+    searches: [
+      { label: 'Photobooth green background examples', q: 'photobooth green background garden party event' },
+      { label: 'Green backdrop event photos', q: 'green backdrop photo booth celebration' },
+    ]
+  },
+  yellow: {
+    name: 'Yellow Background',
+    style: 'background:#FCD34D',
+    emoji: '💛',
+    note: 'Cheerful and sunny — yellow is perfect for children\'s parties, tropical themes, and any event with a fun, upbeat vibe.',
+    searches: [
+      { label: 'Photobooth yellow background examples', q: 'photobooth yellow background birthday kids party' },
+      { label: 'Yellow backdrop event photos', q: 'yellow backdrop photo booth fun celebration' },
+    ]
+  },
+  orange: {
+    name: 'Orange Background',
+    style: 'background:#F97316',
+    emoji: '🧡',
+    note: 'Warm and welcoming — orange works great for Halloween, autumn-themed events, and high-energy celebrations.',
+    searches: [
+      { label: 'Photobooth orange background examples', q: 'photobooth orange background halloween autumn party' },
+      { label: 'Orange backdrop event photos', q: 'orange backdrop photo booth event photos' },
+    ]
+  },
+  purple: {
+    name: 'Purple Background',
+    style: 'background:#A855F7',
+    emoji: '💜',
+    note: 'Luxurious and creative — purple adds a regal, artistic feel. Great for masquerade balls, art events, and elegant birthday parties.',
+    searches: [
+      { label: 'Photobooth purple background examples', q: 'photobooth purple background elegant birthday masquerade' },
+      { label: 'Purple backdrop event photos', q: 'purple backdrop photo booth party luxury' },
+    ]
+  },
+  pink: {
+    name: 'Pink Background',
+    style: 'background:#EC4899',
+    emoji: '🩷',
+    note: 'Fun and feminine — pink is a crowd favourite for hen parties, birthday celebrations, and any event with a girly, playful aesthetic.',
+    searches: [
+      { label: 'Photobooth pink background examples', q: 'photobooth pink background hen party birthday girls' },
+      { label: 'Pink backdrop event photos', q: 'pink backdrop photo booth bachelorette celebration' },
+    ]
+  },
+  rainbow: {
+    name: 'Rainbow Gradient',
+    style: 'background:linear-gradient(135deg,#FF6B6B,#4ECDC4,#FCD34D)',
+    emoji: '✨',
+    note: 'A showstopper — the rainbow gradient creates colourful, vibrant photos that look amazing on social media. Extra fee applies.',
+    searches: [
+      { label: 'Photobooth gradient background examples', q: 'photobooth gradient rainbow background colourful party' },
+      { label: 'Colourful backdrop event photos', q: 'colourful gradient backdrop photo booth instagram' },
+    ]
+  },
+  galaxy: {
+    name: 'Galaxy / Night Sky',
+    style: 'background:radial-gradient(circle,#1a1a2e,#16213e,#0f3460)',
+    emoji: '🌌',
+    note: 'Mysterious and dramatic — the galaxy backdrop creates stunning contrast and makes subjects really stand out. Extra fee applies.',
+    searches: [
+      { label: 'Photobooth galaxy background examples', q: 'photobooth galaxy night sky background party event' },
+      { label: 'Dark backdrop event photos', q: 'galaxy backdrop photo booth dark aesthetic' },
+    ]
+  },
+  pastel: {
+    name: 'Pastel Dream',
+    style: 'background:linear-gradient(135deg,#f8b4d9,#fde8f3,#d8b4fe)',
+    emoji: '🌸',
+    note: 'Soft and dreamy — pastel tones create a whimsical, Instagram-worthy look. Perfect for baby showers, bridal showers, and sweet birthday parties. Extra fee applies.',
+    searches: [
+      { label: 'Photobooth pastel background examples', q: 'photobooth pastel background bridal shower baby shower' },
+      { label: 'Pastel backdrop event photos', q: 'pastel backdrop photo booth dreamy aesthetic' },
+    ]
+  },
+  stripes: {
+    name: 'Party Stripes',
+    style: 'background:repeating-linear-gradient(45deg,#FFD700 0px,#FFD700 10px,#1a1a2e 10px,#1a1a2e 20px)',
+    emoji: '🎉',
+    note: 'Fun and festive — bold stripes create a playful, carnival-style backdrop that\'s perfect for birthday parties and celebrations. Extra fee applies.',
+    searches: [
+      { label: 'Photobooth striped background examples', q: 'photobooth striped background carnival birthday party' },
+      { label: 'Party backdrop event photos', q: 'party stripes backdrop photo booth festive' },
+    ]
+  },
+};
+
+function openBgPreview(key) {
+  const data = BG_PREVIEW_DATA[key];
+  if (!data) return;
+
+  document.getElementById('bgPreviewTitle').textContent  = data.name;
+  document.getElementById('bgPreviewSwatch').style       = data.style;
+  document.getElementById('bgPreviewSwatch').textContent = data.emoji;
+  document.getElementById('bgPreviewNote').textContent   = data.note;
+
+  const linksEl = document.getElementById('bgPreviewLinks');
+  linksEl.innerHTML = data.searches.map(s => {
+    const url = `https://www.google.com/search?q=${encodeURIComponent(s.q)}&tbm=isch`;
+    return `
+      <a href="${url}" target="_blank" class="bg-preview-link">
+        <span class="bg-preview-link-icon">🔍</span>
+        ${s.label}
+      </a>
+    `;
+  }).join('');
+
+  document.getElementById('bgPreviewOverlay').classList.add('open');
+}
+
+function closeBgPreview(e) {
+  if (e && e.target !== document.getElementById('bgPreviewOverlay') && !e.target.classList.contains('bg-preview-close')) return;
+  document.getElementById('bgPreviewOverlay').classList.remove('open');
+}
+  
 </script>
+
+  <!-- Background preview popup -->
+<div class="bg-preview-overlay" id="bgPreviewOverlay" onclick="closeBgPreview(event)">
+  <div class="bg-preview-modal">
+    <div class="bg-preview-header">
+      <div class="bg-preview-title" id="bgPreviewTitle">Background Preview</div>
+      <button class="bg-preview-close" onclick="closeBgPreview()">✕</button>
+    </div>
+    <div class="bg-preview-swatch" id="bgPreviewSwatch"></div>
+    <div class="bg-preview-note" id="bgPreviewNote"></div>
+    <div class="bg-preview-links" id="bgPreviewLinks"></div>
+    <div class="bg-preview-own">
+      <span>Own photos coming soon!</span> Once we have real event photos,
+      they'll appear here so you can see exactly how your event could look.
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
