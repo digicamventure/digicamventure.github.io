@@ -156,18 +156,23 @@
     /* ============================================================
        TICKER
        ============================================================ */
-    .ticker-wrap {
-      overflow: hidden; white-space: nowrap;
-      padding: 0.55rem 0;
-      font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em;
-      background: var(--rose); color: var(--white);
-      transition: background 0.4s;
-    }
-    body.pb-mode .ticker-wrap { background: var(--pb-blue); }
-    .ticker-inner { display: inline-block; animation: ticker 30s linear infinite; }
-    .ticker-inner span { margin: 0 2rem; }
-    .ticker-inner span::before { content: "✦  "; }
-    @keyframes ticker { from{transform:translateX(0);} to{transform:translateX(-50%);} }
+   <!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="tickerInner">
+    <span>FREE SHIPPING IN SINGAPORE</span>
+    <span>CAMERAS PERSONALLY TESTED</span>
+    <span>PAYNOW & CREDIT CARD ACCEPTED</span>
+    <span>3–5 DAY DELIVERY</span>
+    <span>100% TESTED BEFORE LISTING</span>
+    <span>SECONDHAND · FAIRLY PRICED</span>
+    <span>FREE SHIPPING IN SINGAPORE</span>
+    <span>CAMERAS PERSONALLY TESTED</span>
+    <span>PAYNOW & CREDIT CARD ACCEPTED</span>
+    <span>3–5 DAY DELIVERY</span>
+    <span>100% TESTED BEFORE LISTING</span>
+    <span>SECONDHAND · FAIRLY PRICED</span>
+  </div>
+</div>
 
     /* ============================================================
        PAGE SECTIONS — shown/hidden by tab
@@ -1754,26 +1759,49 @@
      TAB SWITCHING
      ---------------------------------------------------------- */
 // Auto-switch tab based on URL parameter on page load
-window.addEventListener('load', () => {
-  const params = new URLSearchParams(window.location.search);
-  const tab = params.get('tab');
-  if (tab === 'photobooth') switchTab('photobooth');
-});  
-function switchTab(tab) {
-    const tabs = document.querySelectorAll('.nav-tab');
-    tabs[0].classList.toggle('active', tab === 'digicam');
-    tabs[1].classList.toggle('active', tab === 'photobooth');
-    document.body.classList.toggle('pb-mode', tab === 'photobooth');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+const TICKER_DIGICAM = `
+  <span>FREE SHIPPING IN SINGAPORE</span>
+  <span>CAMERAS PERSONALLY TESTED</span>
+  <span>PAYNOW & CREDIT CARD ACCEPTED</span>
+  <span>3–5 DAY DELIVERY</span>
+  <span>100% TESTED BEFORE LISTING</span>
+  <span>SECONDHAND · FAIRLY PRICED</span>
+  <span>FREE SHIPPING IN SINGAPORE</span>
+  <span>CAMERAS PERSONALLY TESTED</span>
+  <span>PAYNOW & CREDIT CARD ACCEPTED</span>
+  <span>3–5 DAY DELIVERY</span>
+  <span>100% TESTED BEFORE LISTING</span>
+  <span>SECONDHAND · FAIRLY PRICED</span>
+`;
 
-  function scrollToSection(sectionId, tab) {
-    switchTab(tab);
-    setTimeout(() => {
-      const el = document.getElementById(sectionId);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }, 300);
-  }
+const TICKER_PHOTOBOOTH = `
+  <span>UNLIMITED PHOTO PRINTS INCLUDED</span>
+  <span>DELIVERY & SETUP INCLUDED</span>
+  <span>1.5HR BUFFER BETWEEN BOOKINGS</span>
+  <span>PRIMARY COLOURS INCLUDED · SPECIAL BACKGROUNDS AVAILABLE</span>
+  <span>PROPS AVAILABLE AS ADD-ON</span>
+  <span>NIGHT SURCHARGE AFTER 10PM</span>
+  <span>UNLIMITED PHOTO PRINTS INCLUDED</span>
+  <span>DELIVERY & SETUP INCLUDED</span>
+  <span>1.5HR BUFFER BETWEEN BOOKINGS</span>
+  <span>PRIMARY COLOURS INCLUDED · SPECIAL BACKGROUNDS AVAILABLE</span>
+  <span>PROPS AVAILABLE AS ADD-ON</span>
+  <span>NIGHT SURCHARGE AFTER 10PM</span>
+`;
+
+function switchTab(tab) {
+  const tabs   = document.querySelectorAll('.nav-tab');
+  const ticker = document.getElementById('tickerInner');
+
+  tabs[0].classList.toggle('active', tab === 'digicam');
+  tabs[1].classList.toggle('active', tab === 'photobooth');
+  document.body.classList.toggle('pb-mode', tab === 'photobooth');
+
+  // Swap ticker content
+  ticker.innerHTML = tab === 'photobooth' ? TICKER_PHOTOBOOTH : TICKER_DIGICAM;
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 
   /* ----------------------------------------------------------
