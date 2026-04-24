@@ -2549,7 +2549,6 @@ function scrollToBookingForm() {
    ---------------------------------------------------------- */
 loadCalBookings();
  
-</script>
  
 
 function openBgPreview(key) {
@@ -2584,7 +2583,10 @@ function openBgPreview(key) {
 
   document.getElementById('bgPreviewOverlay').classList.add('open');
 }
-  
+  function closeBgPreview(e) {
+  if (e && e.target !== document.getElementById('bgPreviewOverlay') && !e.target.classList.contains('bg-preview-close')) return;
+  document.getElementById('bgPreviewOverlay').classList.remove('open');
+}
 </script>
 
   <!-- Background preview popup -->
